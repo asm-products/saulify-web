@@ -7,8 +7,10 @@ Werkzeug==0.9.6
 argparse==1.2.1
 cssselect==0.9.1
 gunicorn==19.1.1
+html2text==2014.9.25
 itsdangerous==0.24
 lxml==3.4.0
+markdown2==2.3.0
 newspaper==0.0.8
 nltk==3.0.0
 requests==2.4.3
