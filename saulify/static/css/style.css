@@ -1,0 +1,44 @@
+body {
+    font-family: 'Open Sans', Arial, sans-serif;
+    background: #f3f3f3;
+    font-weight: 300;
+    margin: 0;
+    padding: 0;
+}
+section.main {
+    position: relative;
+    padding: 100px 15px;
+    text-align: center;
+}
+.btn, .btn-lg, .input-lg {
+    border-radius: 3px;
+}
+.form-control {
+    border-radius: 3px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border: 0;
+}
+.input-lg {
+    height: 50px;
+}
+.btn-lg, .btn-group-lg>.btn {
+    padding: 10px 28px;
+    height: 52px;
+}
+.btn-large {
+    font-size: 18px;
+    padding: 20px 50px;
+    margin: 5px 10px;
+}
+.btn-success {
+    background-color: #2ecc71;
+    background-image: none;
+    border: 0;
+    line-height: 1.8;
+}
+.btn-success:hover, .btn-success:focus, .btn-success:active {
+    background-color: #29c36a;
+    color: #fff;
+    border: 0;
+}

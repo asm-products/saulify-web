@@ -19,6 +19,9 @@ To install it:
 - Use `pip install -r requirements.txt` to install the 3rd party dependencies, such as Flask, et. al.
 - Type `foreman start` at the command line to start the local server.
 
+Note: Saulify uses the [Newspaper](https://github.com/codelucas/newspaper) library for scraping website articles. If you have trouble installing it on Mac OS X Yosemite during the `pip install` process above, please see this [Github issue](https://github.com/codelucas/newspaper/issues/79) for helpful info.
+
+
 More info here for [getting started w/ Python on Heroku](https://devcenter.heroku.com/articles/getting-started-with-python-o).
 
 #### Contributing
