@@ -17,7 +17,7 @@ To install it:
 - Use `mkvirtualenv saulify` to create a new virtual environment for the project. This will ensure all of your Python libraries are installed properly without conflict.
 - Use `cd <saulify folder path>` to change to the Saulify directory and then `workon saulify` to switch to the Saulify virtual environment you created previously.
 - Use `pip install -r requirements.txt` to install the 3rd party dependencies, such as Flask, et. al.
-- Type `foreman start` at the command line to start the local server.
+- Type `foreman run python runserver.py` (for development) or `foreman start` (for production) at the command line to start the local server.
 
 Note: Saulify uses the [Newspaper](https://github.com/codelucas/newspaper) library for scraping website articles. If you have trouble installing it on Mac OS X Yosemite during the `pip install` process above, please see this [Github issue](https://github.com/codelucas/newspaper/issues/79) for helpful info.
 

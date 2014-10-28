@@ -1,14 +1,28 @@
 body {
     font-family: 'Open Sans', Arial, sans-serif;
-    background: #f3f3f3;
+    background: #fafafa;
     font-weight: 300;
     margin: 0;
     padding: 0;
 }
-section.main {
+.container.landing-page {
     position: relative;
     padding: 100px 15px;
     text-align: center;
+}
+.container.article-page {
+    padding: 50px 0;
+    background-color: #fff;
+    color: rgba(0,0,0,0.8);
+    font-family: 'Lora', serif;
+    letter-spacing: 0.01rem;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 18px;
+    line-height: 1.5;
+}
+.container.article-page p {
+    margin-bottom: 30px;
 }
 .btn, .btn-lg, .input-lg {
     border-radius: 3px;
