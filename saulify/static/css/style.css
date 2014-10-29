@@ -5,6 +5,9 @@ body {
     margin: 0;
     padding: 0;
 }
+a.bookmarklet {
+  cursor: move;
+}
 .container.landing-page {
     position: relative;
     padding: 100px 15px;
