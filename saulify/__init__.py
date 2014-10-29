@@ -20,7 +20,8 @@ def create_article():
 @app.route('/articles/show')
 def show_article():
     # TODO: Need to extract this to a module
-    article = Article(request.args.get('url_to_clean'))
+    url_to_clean = request.args.get('url_to_clean')
+    article = Article(url_to_clean)
     article.download()
     article.parse()
     html_string = ElementTree.tostring(article.clean_top_node)
@@ -29,7 +30,7 @@ def show_article():
     # Note: Markup marks it as html safe since we're rendering it from Markdown
     article_html = Markup(markdown2.markdown(markdown))
     a = {'html': article_html, 'authors': str(', '.join(article.authors)), 'title': article.title}
-    return render_template('article/index.html', article=a)
+    return render_template('article/index.html', article=a, original=url_to_clean)
 
 @app.errorhandler(404)
 def page_not_found(e):
