@@ -11,7 +11,7 @@ body {
     text-align: center;
 }
 .container.article-page {
-    padding: 50px 0;
+    padding: 40px 15px;
     background-color: #fff;
     color: rgba(0,0,0,0.8);
     font-family: 'Lora', serif;
@@ -20,6 +20,9 @@ body {
     font-style: normal;
     font-size: 18px;
     line-height: 1.5;
+}
+.container.article-page h2 {
+  font-weight: 600;
 }
 .container.article-page p {
     margin-bottom: 30px;
