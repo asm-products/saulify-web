@@ -28,7 +28,8 @@ def show_article():
     # TODO: Need to save the markdown, but just show it for now
     # Note: Markup marks it as html safe since we're rendering it from Markdown
     article_html = Markup(markdown2.markdown(markdown))
-    return render_template('article/index.html', article_html=article_html)
+    a = {'html': article_html, 'authors': str(', '.join(article.authors)), 'title': article.title}
+    return render_template('article/index.html', article=a)
 
 @app.errorhandler(404)
 def page_not_found(e):

@@ -3,7 +3,11 @@
   <div class="container article-page">
     <div class="row">
       <div class="col-md-8 col-md-offset-2">
-        {{ article_html }}
+        <h1>{{ article.title }}</h1>
+        <h4>{{ article.authors }}</h4>
+        <div class="article">
+          {{ article.html }}
+        </div>
       </div>
     </div>
   </div>
