@@ -19,13 +19,13 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
     outline: 0 none;
 }
 a {
-    color: #1d7999;
+    color: #5BA3B9;
 }
 a:hover {
     color: #46a5bb;
 }
 a:visited {
-    color: #136087;
+    color: #5BA3B9;
 }
 
 /* Specific styles */
@@ -102,4 +102,15 @@ a.bookmarklet {
     background-color: rgba(78, 140, 159, 1.0);
     color: #fff;
     border: 0;
+}
+/* Error page styles */
+.container.error-page {
+  margin-top: 50px;
+}
+.error-page h1 {
+  font-family: 'Lora', serif;
+}
+.error-page blockquote {
+  margin-top: 20px;
+  border: none;
 }
