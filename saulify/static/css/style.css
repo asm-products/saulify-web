@@ -37,6 +37,9 @@ a.bookmarklet {
     padding: 100px 15px;
     text-align: center;
 }
+.container.landing-page form {
+    margin-top: 30px;
+}
 .container.article-page {
     padding: 20px 15px 50px;
     background-color: #fff;
@@ -75,7 +78,7 @@ a.bookmarklet {
     border-radius: 3px;
     -webkit-box-shadow: none;
     box-shadow: none;
-    border: 0;
+    border: 1px solid #ddd;
 }
 .input-lg {
     height: 50px;
@@ -90,13 +93,13 @@ a.bookmarklet {
     margin: 5px 10px;
 }
 .btn-success {
-    background-color: rgba(108, 199, 108, 1.0);
+    background-color: rgba(70, 165, 187, 1.0);
     background-image: none;
     border: 0;
     line-height: 1.8;
 }
 .btn-success:hover, .btn-success:focus, .btn-success:active {
-    background-color: rgba(94, 182, 94, 1.0);
+    background-color: rgba(78, 140, 159, 1.0);
     color: #fff;
     border: 0;
 }
