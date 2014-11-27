@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="container landing-page">
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+      <p><label>Username: </label>{{ user.username }}</p>
+      <p><label>Email: </label>{{ user.email }}</p>
+      <p><label>API key: </label>{{ user.api_key }}</p>
+      <a href="javascript:createkey();" class="btn btn-default" role="button">create/recreate key</a>
+      <a href="javascript:revokekey();" class="btn btn-default" role="button">revoke key</a>
+    </div>
+    <a href="/logout" class="btn btn-default" role="button">Logout</a>
+  </div>
+</div>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script>
+
+function createkey(){
+  $.getJSON("/createkey").done(function(data){       
+                    location.reload();
+                }).fail(function(data,textstatus,xhr){
+                    alert('fail = ' + data + ', textstatus ' + textstatus );    
+                })
+                ;
+            }
+function revokekey(){
+  $.getJSON("/revokekey").done(function(data){       
+                    location.reload();
+                }).fail(function(data,textstatus,xhr){
+                    alert('fail = ' + data + ', textstatus ' + textstatus );    
+                })
+                ;
+            }
+</script>
+{% endblock %}
