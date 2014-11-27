@@ -22,3 +22,5 @@ wsgiref==0.1.2
 flask-sqlalchemy
 flask-login
 sqlalchemy
+psycopg2
+flask-wtf
