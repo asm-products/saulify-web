@@ -24,3 +24,4 @@ flask-login
 sqlalchemy
 psycopg2
 flask-wtf
+passlib

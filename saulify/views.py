@@ -9,7 +9,7 @@ from xml.etree import ElementTree
 import html2text
 import markdown2
 from functools import wraps
-from api_key_gen import api_key_gen
+from saul import api_key_gen
 
 
 @login_manager.user_loader
@@ -28,9 +28,8 @@ def login():
         return render_template('login.html')
     username = request.form['username']
     password = request.form['password']
-    registered_user = User.query.filter_by(username=username,
-                                           password=password).first()
-    if registered_user is None:
+    registered_user = User.query.filter_by(username=username).first()
+    if not registered_user or not registered_user.verify_password(password):
         flash('Username or Password is invalid', 'error')
         return redirect(url_for('login'))
     login_user(registered_user)
@@ -75,8 +74,9 @@ def require_appkey(function):
     @wraps(function)
     # the new, post-decoration function. Note *args and **kwargs here.
     def decorated_function(*args, **kwargs):
-        if request.args.get('key') and User.query.filter_by(api_key=request.args.get('key')).first():
-                return function(*args, **kwargs)
+        if request.args.get('key') and \
+           User.query.filter_by(api_key=request.args.get('key')).first():
+            return function(*args, **kwargs)
         else:
             abort(401)
     return decorated_function
