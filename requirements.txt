@@ -25,3 +25,5 @@ sqlalchemy
 psycopg2
 flask-wtf
 passlib
+pytest
+pytest-flask
