@@ -1,8 +1,8 @@
-from saulify import app
+from saulify import app as test_app
 import pytest
 
 
 @pytest.fixture
-def test_app():
-    test_app = app()
-    return test_app
+def app():
+    app = test_app()
+    return app
