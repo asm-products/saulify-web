@@ -51,7 +51,7 @@ def createkey():
     user = g.user
     user.api_key = api_key_gen()
     db.session.commit()
-    return jsonify({"result": "succes"})
+    return jsonify({"result": "success"})
 
 
 @app.route('/revokekey')
@@ -60,7 +60,7 @@ def revokekey():
     user = g.user
     user.api_key = None
     db.session.commit()
-    return jsonify({"result": "succes"})
+    return jsonify({"result": "success"})
 
 
 @app.route('/logout')
