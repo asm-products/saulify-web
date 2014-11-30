@@ -3,11 +3,13 @@
 <div class="container landing-page">
   <div class="row">
     <div class="col-md-6 col-md-offset-3">
-      <p><label>Username: </label>{{ user.username }}</p>
-      <p><label>Email: </label>{{ user.email }}</p>
-      <p><label>API key: </label>{{ user.api_key }}</p>
+      <p><label>Username:</label>{{ user.username }}</p>
+      <p><label>Email:</label>{{ user.email }}</p>
+      <p><label>API key:</label>{% if user.api_key %}{{ user.api_key }}{% endif %}</p>
       <a href="javascript:createkey();" class="btn btn-default" role="button">Create / Recreate Key</a>
-      <a href="javascript:revokekey();" class="btn btn-default" role="button">Revoke Key</a>
+      {% if user.api_key %}
+        <a href="javascript:revokekey();" class="btn btn-default" role="button">Revoke Key</a>
+      {% endif %}
     </div>
     <a href="/logout" class="btn btn-default" role="button">Logout</a>
   </div>
@@ -15,21 +17,24 @@
 <script src="http://code.jquery.com/jquery-latest.js"></script>
 <script>
 
+
 function createkey(){
-  $.getJSON("/createkey").done(function(data){       
-                    location.reload();
-                }).fail(function(data,textstatus,xhr){
-                    alert('fail = ' + data + ', textstatus ' + textstatus );    
-                })
-                ;
-            }
+  $.ajax({
+    type: "PUT",
+    url: "/user/key",
+    success: function(){
+        location.reload();
+    }
+  });
+}
 function revokekey(){
-  $.getJSON("/revokekey").done(function(data){       
-                    location.reload();
-                }).fail(function(data,textstatus,xhr){
-                    alert('fail = ' + data + ', textstatus ' + textstatus );    
-                })
-                ;
-            }
+  $.ajax({
+    type: "DELETE",
+    url: "/user/key",
+    success: function(){
+        location.reload();
+    }
+  });
+}
 </script>
 {% endblock %}

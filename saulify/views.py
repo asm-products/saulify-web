@@ -45,7 +45,7 @@ def user():
                            user=user)
 
 
-@app.route('/createkey')
+@app.route('/user/key', methods=['PUT', 'POST'])
 @login_required
 def createkey():
     user = g.user
@@ -54,7 +54,7 @@ def createkey():
     return jsonify({"result": "success"})
 
 
-@app.route('/revokekey')
+@app.route('/user/key', methods=['DELETE'])
 @login_required
 def revokekey():
     user = g.user
