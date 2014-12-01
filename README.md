@@ -7,7 +7,7 @@ Saulify runs on Heroku: [http://saulify.heroku.com](http://saulify.heroku.com)
 
 #### Installing Locally
 
-Saulify is built on [Python](https://www.python.org/) using the [Flash](http://flask.pocoo.org/docs/0.10/) micro-framework. 
+Saulify is built on [Python](https://www.python.org/) using the [Flask](http://flask.pocoo.org/docs/0.10/) micro-framework. 
 
 To install it:
 

@@ -19,3 +19,11 @@ virtualenv==1.11.6
 virtualenv-clone==0.2.5
 virtualenvwrapper==4.3.1
 wsgiref==0.1.2
+flask-sqlalchemy
+flask-login
+sqlalchemy
+psycopg2
+flask-wtf
+passlib
+pytest
+pytest-flask
