@@ -5,7 +5,7 @@ import pytest
 import os
 
 
-SQLALCHEMY_TEST_DB = os.environ.get('TEST_DATABASE_URL')
+SQLALCHEMY_TEST_DB = '***REMOVED***'
 
 
 @pytest.fixture
