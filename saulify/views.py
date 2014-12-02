@@ -1,5 +1,5 @@
 from flask import request, render_template, redirect, url_for, Markup, \
-    abort, jsonify, g, flash
+    abort, jsonify, g, flash, make_response
 from newspaper import Article
 from flask.ext.login import login_user, logout_user, current_user, \
     login_required
@@ -9,7 +9,7 @@ from xml.etree import ElementTree
 import html2text
 import markdown2
 from functools import wraps
-from saul import api_key_gen
+from saul import api_key_gen, ratelimit, get_view_rate_limit
 
 
 @login_manager.user_loader
@@ -136,3 +136,21 @@ def api():
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
+
+@app.route('/test')
+@ratelimit(limit=2, per=60 * 15)
+def test_route():
+    '''This would limit the function to be called 300 times per 15 minutes.'''
+    resp = make_response('response test')
+    return resp
+
+@app.after_request
+def inject_x_rate_headers(response):
+    limit = get_view_rate_limit()
+    print limit
+    if limit and limit.send_x_headers:
+        h = response.headers
+        h.add('X-RateLimit-Remaining', str(limit.remaining))
+        h.add('X-RateLimit-Limit', str(limit.limit))
+        h.add('X-RateLimit-Reset', str(limit.reset))
+    return response
