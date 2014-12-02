@@ -5,6 +5,7 @@ import time
 from flask import g, request
 from saulify import app
 from functools import wraps
+from flask.ext.login import current_user
 
 def api_key_gen():
     hash_key = hashlib.sha256(str(random.getrandbits(256))).digest()
@@ -55,10 +56,13 @@ def on_over_limit(rlimit):
     """
     return 'You hit the rate limit', 429
 
+# types of limit
+LIMIT_METHOD_API = 0
+LIMIT_METHOD_USER = 1
+LIMIT_METHOD_IP = 2
 
-def ratelimit(limit, per=300, send_x_headers=True,
+def ratelimit(limit, per=300, send_x_headers=True, method=LIMIT_METHOD_API,
               over_limit=on_over_limit,
-              scope_func=lambda: request.remote_addr,
               key_func=lambda: request.endpoint):
     """ Enables support for Rate-Limits on API methods
     The key is constructed by default from the remote address or the
@@ -71,12 +75,32 @@ def ratelimit(limit, per=300, send_x_headers=True,
     if the client is indeed over limit, we return a 429, see
     http://tools.ietf.org/html/draft-nottingham-http-new-status-04#section-4
 
+    should ALWAYS be put after the decorator require_appkey
+
     use: @ratelimit(limit=2, per=60) - number of calls per seconds
+
+    :param limit: the number of calls to be accepted
+    :param per (optional): the windows in seconds
+    :param send_x_headers(optional): should put the limit headers on response
+    :param method (optional): API_KEY,
+    :param over_limit(optional): a function with the asnwer when the limit is reached
+    :param key_func(optional): function with the endpoint being called
     """
     def decorator(f):
         @wraps(f)
         def rate_limited(*args, **kwargs):
-            key = 'rate-limit/%s/%s/' % (key_func(), scope_func())
+            # check what kind of key should be used
+            user = current_user
+            if method==LIMIT_METHOD_API:
+                # get the key from the URL
+                key = request.args.get('key')
+            elif (method==LIMIT_METHOD_USER) and user.is_authenticated():
+                key = user.username()
+            else:
+                key = request.remote_addr
+
+            # define the key and save in global to use later
+            key = 'rate-limit/%s/%s/' % (key_func(), key)
             rlimit = RateLimit(key, limit, per, send_x_headers)
             g._rate_limit = rlimit
             if over_limit is not None and rlimit.over_limit:
