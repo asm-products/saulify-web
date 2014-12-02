@@ -39,17 +39,17 @@ class RateLimit(object):
         self.current = p.execute()[0]
 
     remaining = property(lambda x: max(0, x.limit - x.current))
-    over_limit = property(lambda x: x.current >= x.limit)
+    over_limit = property(lambda x: x.current > x.limit)
 
 
-def get_view_rate_limit():
+def get_rate_limit():
     """ If available, returns a RateLimit instance which is valid for the
     current request-response.
     """
-    return getattr(g, '_view_rate_limit', None)
+    return getattr(g, '_rate_limit', None)
 
 
-def on_over_limit():
+def on_over_limit(rlimit):
     """
     The answer when the limit is set. It would be better if it was a json.
     """
@@ -70,13 +70,15 @@ def ratelimit(limit, per=300, send_x_headers=True,
     of the RateLimit class and stores an instance on g as g._rate_limit. Also
     if the client is indeed over limit, we return a 429, see
     http://tools.ietf.org/html/draft-nottingham-http-new-status-04#section-4
+
+    use: @ratelimit(limit=2, per=60) - number of calls per seconds
     """
     def decorator(f):
         @wraps(f)
         def rate_limited(*args, **kwargs):
             key = 'rate-limit/%s/%s/' % (key_func(), scope_func())
             rlimit = RateLimit(key, limit, per, send_x_headers)
-            g._view_rate_limit = rlimit
+            g._rate_limit = rlimit
             if over_limit is not None and rlimit.over_limit:
                 return over_limit(rlimit)
             return f(*args, **kwargs)

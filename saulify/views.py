@@ -9,7 +9,7 @@ from xml.etree import ElementTree
 import html2text
 import markdown2
 from functools import wraps
-from common import api_key_gen, ratelimit, get_view_rate_limit
+from common import api_key_gen, ratelimit, get_rate_limit
 
 
 @login_manager.user_loader
@@ -140,7 +140,7 @@ def page_not_found(e):
 @app.route('/test')
 @ratelimit(limit=2, per=60)
 def test_route():
-    '''This would limit the function to be called 300 times per 15 minutes.'''
+    '''This would limit the function to be called 2 times per 1 minutes.'''
     resp = make_response('response test')
     return resp
 
@@ -149,7 +149,7 @@ def inject_x_rate_headers(response):
     '''
     Add headers before responding to user
     .'''
-    limit = get_view_rate_limit()
+    limit = get_rate_limit()
     print limit
     if limit and limit.send_x_headers:
         h = response.headers
