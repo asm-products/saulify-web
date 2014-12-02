@@ -17,6 +17,18 @@ def api_key_gen():
 '''
 The rating code is based on http://flask.pocoo.org/snippets/70/ and http://python-eve.org/
 '''
+# Debug logging
+import logging
+import sys
+# Defaults to stdout
+logging.basicConfig(level=logging.INFO)
+log = logging.getLogger(__name__)
+try:
+    log.info('Logging to console')
+except:
+    _, ex, _ = sys.exc_info()
+    log.error(ex.message)
+
 class RateLimit(object):
     """ Implements the Rate-Limiting logic using Redis as a backend.
 
@@ -96,7 +108,9 @@ def ratelimit(limit, per=300, send_x_headers=True, method=LIMIT_METHOD_API,
                 key = request.args.get('key')
             elif (method==LIMIT_METHOD_USER) and user.is_authenticated():
                 key = user.username()
-            else:
+
+            # did not worked, get by ip
+            if not key:
                 key = request.remote_addr
 
             # define the key and save in global to use later
