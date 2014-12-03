@@ -137,12 +137,6 @@ def api():
 def page_not_found(e):
     return render_template('404.html'), 404
 
-@app.route('/test')
-@ratelimit(limit=2, per=60, method=LIMIT_METHOD_API)
-def test_route():
-    '''This would limit the function to be called 2 times per 1 minutes.'''
-    resp = make_response('response test')
-    return resp
 
 @app.after_request
 def inject_x_rate_headers(response):
