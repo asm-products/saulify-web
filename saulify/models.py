@@ -9,6 +9,7 @@ class User(db.Model):
     email = db.Column('email', db.String(120), unique=True)
     password_hash = db.Column(db.String(128))
     api_key = db.Column('api_key', db.String)
+    role = db.Column(db.Integer, default=100)  # 100-member, 101-admin
 
     def __init__(self, username, email):
         self.username = username

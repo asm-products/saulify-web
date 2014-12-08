@@ -1,15 +1,24 @@
 from flask import request, render_template, redirect, url_for, Markup, \
-    abort, jsonify, g, flash
+    abort, jsonify, g, flash, current_app, session
 from newspaper import Article
 from flask.ext.login import login_user, logout_user, current_user, \
     login_required
-from saulify import app, login_manager, db
+from flask.ext.principal import Permission, RoleNeed, Identity, \
+    AnonymousIdentity, identity_changed, UserNeed, identity_loaded
+from saulify import app, login_manager, db, principals
 from models import User
 from xml.etree import ElementTree
 import html2text
 import markdown2
 from functools import wraps
 from saul import api_key_gen
+from forms import AdUserForm
+import json
+
+
+MEMBER = 100
+ADMIN = 101
+admin = Permission(RoleNeed('admin'))
 
 
 @login_manager.user_loader
@@ -17,9 +26,107 @@ def load_user(id):
     return User.query.get(int(id))
 
 
+@identity_loaded.connect_via(app)
+def on_identity_loaded(sender, identity):
+    # Set the identity user object
+    identity.user = current_user
+    # Add the UserNeed to the identity
+    if hasattr(current_user, 'id'):
+        identity.provides.add(UserNeed(current_user.id))
+        # Assuming the User model has a list of roles, update the
+        # identity with the roles that the user provides
+        if current_user.role == MEMBER:
+            identity.provides.add(RoleNeed('member'))
+        if current_user.role == ADMIN:
+            identity.provides.add(RoleNeed('admin'))
+
+
 @app.before_request
 def before_request():
     g.user = current_user
+
+
+def createkey(user):
+    user.api_key = api_key_gen()
+    db.session.commit()
+
+
+def revokekey(user):
+    user.api_key = None
+    db.session.commit()
+
+
+@app.route('/dashboard', methods=['GET', 'POST'])
+@admin.require(401)
+def dashboard():
+    form = AdUserForm(request.form)
+    users = User.query.filter_by(role=100).all()
+    return render_template('dashboard.html',
+                           users=users, form=form)
+
+
+@app.route('/adduser', methods=['POST'])
+@admin.require(401)
+def add_user():
+    form = AdUserForm(request.form)
+    if form.validate():
+        result = {}
+        result['iserror'] = False
+        if not form.id.data:
+            if True:
+                newuser = User(username=form.username.data,
+                               email=form.email.data)
+                newuser.hash_password(form.password.data)
+                db.session.add(newuser)
+                db.session.commit()
+                result['savedsuccess'] = True
+            else:
+                result['savedsuccess'] = False
+            return json.dumps(result)
+        else:
+            edituser = User.query.get(form.id.data)
+            edituser.username = form.username.data
+            edituser.email = form.email.data
+            edituser.hash_password(form.password.data)
+            db.session.commit()
+            result['savedsuccess'] = True
+            return json.dumps(result)
+    else:
+        form.errors['iserror'] = True
+        print form.errors
+        return json.dumps(form.errors)
+
+
+@app.route('/user/<id>', methods=['GET', 'DELETE'])
+@admin.require(401)
+def user_mod(id):
+    user = User.query.get(id)
+    if request.method == 'GET':
+        return jsonify({"id": user.id,
+                        "username": user.username,
+                        "email": user.email})
+    elif request.method == 'DELETE':
+        db.session.delete(user)
+        db.session.commit()
+        result = {}
+        result['result'] = 'success'
+        return jsonify(result)
+
+
+@app.route('/dashboard/key/<int:user_id>', methods=['PUT', 'POST'])
+@admin.require(401)
+def dash_createkey(user_id):
+    user = User.query.get(user_id)
+    createkey(user)
+    return jsonify({"result": "success"})
+
+
+@app.route('/dashboard/key/<int:user_id>', methods=['DELETE'])
+@admin.require(401)
+def dash_revokekey(user_id):
+    user = User.query.get(user_id)
+    revokekey(user)
+    return jsonify({"result": "success"})
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -33,7 +140,11 @@ def login():
         flash('Username or Password is invalid', 'error')
         return redirect(url_for('login'))
     login_user(registered_user)
+    identity_changed.send(current_app._get_current_object(),
+                          identity=Identity(current_user.id))
     flash('Logged in successfully')
+    if registered_user.role == ADMIN:
+        return redirect(url_for('dashboard'))
     return redirect(url_for('user'))
 
 
@@ -47,25 +158,25 @@ def user():
 
 @app.route('/user/key', methods=['PUT', 'POST'])
 @login_required
-def createkey():
-    user = g.user
-    user.api_key = api_key_gen()
-    db.session.commit()
+def user_createkey():
+    createkey(g.user)
     return jsonify({"result": "success"})
 
 
 @app.route('/user/key', methods=['DELETE'])
 @login_required
-def revokekey():
-    user = g.user
-    user.api_key = None
-    db.session.commit()
+def user_revokekey():
+    revokekey(g.user)
     return jsonify({"result": "success"})
 
 
 @app.route('/logout')
 def logout():
     logout_user()
+    for key in ('identity.name', 'identity.auth_type'):
+        session.pop(key, None)
+    identity_changed.send(current_app._get_current_object(),
+                          identity=AnonymousIdentity())
     return redirect(url_for('login'))
 
 
@@ -131,6 +242,12 @@ def api():
                     'html': article_html,
                     'plaintext': markdown.replace('\n', ' '),
                     'markdown': markdown})
+
+
+@app.errorhandler(401)
+def unauthorized(error):
+    return 'Please login as admin to see this page'
+    # TODO: template 401 unauthorised
 
 
 @app.errorhandler(404)
