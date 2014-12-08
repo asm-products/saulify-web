@@ -65,15 +65,6 @@
             {{ form.password(class="form-control", placeholder="Enter password") }}
             <p class="flash" id="error_password">{{ form.password.errors[0] }}</p>
           </div>
-          {% with messages = get_flashed_messages() %}
-      		{% if messages %}
-        	<ul>
-        	{% for message in messages %}
-            <li>{{ message }} </li>
-        	{% endfor %}
-        	</ul>
-      		{% endif %}
-    			{% endwith %}
         </div>
       </form>
       </div>
