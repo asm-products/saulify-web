@@ -137,6 +137,8 @@ function deleteuser(user_id){
 		$("#add_user_add").click(function(){
         $("#email").val("");
         $("#password").val("");
+        $("#error_email").text("");
+        $("#error_password").text("");
         $("#addUser").modal('show');
         return false;
     });
