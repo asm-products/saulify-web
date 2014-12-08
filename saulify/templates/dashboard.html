@@ -2,12 +2,20 @@
 {% block body %}
 <div class="container landing-page">
   <div class="row">
-    <div class="col-md-12">
-			<table class="table table-striped">
-  			<thead>
+  	<div class="col-md-4">
+  		<div class="well" style="max-width: 400px; margin: 0 auto 10px;">
+      	<a href="#" class="btn btn-default btn-md btn-block" id="add_user_add">Add User</a>
+      	<a href="/logout" class="btn btn-default btn-md btn-block" role="button">Logout</a>
+    	</div>
+    </div>
+    <div class="col-md-8">
+    	<div class="panel panel-default">
+  			<div class="panel-heading">All users</div>
+  				<div class="panel-body">
+						<table class="table table-striped">
+  						<thead>
         	<tr>
           	<th>#id</th>
-          	<th>Username</th>
           	<th>Email</th>
           	<th>Api Key</th>
           	<th></th>
@@ -17,12 +25,11 @@
       		{% for  user in users %}
         	<tr>
           	<td>{{ user.id }}</td>
-         		<td>{{ user.username }}</td>
        			<td>{{ user.email }}</td>
       			<td>{% if user.api_key %}
-      			{{ user.api_key }}
       			<a href="javascript:createkey('{{user.id}}');"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></a>
      				<a href="javascript:revokekey('{{user.id}}');"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></a>
+     				{{ user.api_key }}
      				{% else %}
      				<a href="javascript:createkey('{{user.id}}');"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
       			{% endif %}
@@ -33,7 +40,9 @@
         	{% endfor %}
       	</tbody>
 			</table>
-			<button type="button" class="btn btn-default btn-sm" id="add_user_add">Add User</button>
+			</div>
+			</div>
+			</div>
 		</div>
   </div>
 </div>
@@ -48,22 +57,16 @@
       <form action="" method=post id="adduserform" role="form">
   			{{ form.hidden_tag() }}
   			{{ form.id }}
-      	<div class="control-group">
-        	<div class="controls">
-        		{{ form.username(class="form-control", placeholder="Enter Username") }}
-        			<p class="flash" id="error_username">{{  form.username.errors[0] }}</p>
-          </div>
-        </div>
         <div class="control-group">
           <div class="controls">
             {{ form.email(class="form-control", placeholder="Enter email") }}
-            <p class="flash" id="error_email">{{ form.email.errors[0] }}</p>
+            <p class="text-danger flash" id="error_email">{{ form.email.errors[0] }}</p>
           </div>
         </div>
         <div class="control-group">
           <div class="controls">
             {{ form.password(class="form-control", placeholder="Enter password") }}
-            <p class="flash" id="error_password">{{ form.password.errors[0] }}</p>
+            <p class="text-danger flash" id="error_password">{{ form.password.errors[0] }}</p>
           </div>
         </div>
       </form>
@@ -106,9 +109,10 @@ function edituser(id)
             {}
         ).done(function(data){
             $("#id").val(data.id);
-            $("#username").val(data.username);
             $("#email").val(data.email);
             $("#password").val("");
+            $("#error_email").text("");
+            $("#error_password").text("");
             $("#addUser").modal('show');
         }).fail(function(data,textstatus,xhr){
             alert('fail = ' + data + ', textstatus ' + textstatus );    
@@ -131,7 +135,6 @@ function deleteuser(user_id){
 });
 }
 		$("#add_user_add").click(function(){
-        $("#username").val("");
         $("#email").val("");
         $("#password").val("");
         $("#addUser").modal('show');
@@ -144,13 +147,11 @@ function deleteuser(user_id){
             $("#adduserform").serialize(),  
             function(data, textStatus) {
                  var errors = $.parseJSON(data);    
-                $("#error_username").text("");
                 $("#error_email").text("");
                 $("#error_password").text("");
     
                 if(errors.iserror)
                 {       
-                    if(errors.username!=undefined) $("#error_username").text(errors.username[0]);
                     if(errors.email!=undefined) $("#error_email").text(errors.email[0]);
                     if(errors.password!=undefined) $("#error_password").text(errors.password[0]);
                 }else if (errors.savedsuccess)

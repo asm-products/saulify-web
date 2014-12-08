@@ -74,8 +74,7 @@ def add_user():
         result['iserror'] = False
         if not form.id.data:
             if True:
-                newuser = User(username=form.username.data,
-                               email=form.email.data)
+                newuser = User(email=form.email.data)
                 newuser.hash_password(form.password.data)
                 db.session.add(newuser)
                 db.session.commit()
@@ -85,7 +84,6 @@ def add_user():
             return json.dumps(result)
         else:
             edituser = User.query.get(form.id.data)
-            edituser.username = form.username.data
             edituser.email = form.email.data
             edituser.hash_password(form.password.data)
             db.session.commit()
@@ -103,7 +101,6 @@ def user_mod(id):
     user = User.query.get(id)
     if request.method == 'GET':
         return jsonify({"id": user.id,
-                        "username": user.username,
                         "email": user.email})
     elif request.method == 'DELETE':
         db.session.delete(user)
@@ -133,11 +130,11 @@ def dash_revokekey(user_id):
 def login():
     if request.method == 'GET':
         return render_template('login.html')
-    username = request.form['username']
+    email = request.form['email']
     password = request.form['password']
-    registered_user = User.query.filter_by(username=username).first()
+    registered_user = User.query.filter_by(email=email).first()
     if not registered_user or not registered_user.verify_password(password):
-        flash('Username or Password is invalid', 'error')
+        flash('Email or Password is invalid', 'error')
         return redirect(url_for('login'))
     login_user(registered_user)
     identity_changed.send(current_app._get_current_object(),
@@ -177,7 +174,7 @@ def logout():
         session.pop(key, None)
     identity_changed.send(current_app._get_current_object(),
                           identity=AnonymousIdentity())
-    return redirect(url_for('login'))
+    return redirect(url_for('index'))
 
 
 # The actual decorator function

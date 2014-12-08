@@ -4,9 +4,9 @@ from saulify.models import User
 
 db.create_all()
 
-member = User(username='saul', email='saul@saulify.me')
+member = User(email='saul@saulify.me')
 member.hash_password('saul')
-admin = User(username='admin', email='admin@saulify.me')
+admin = User(email='admin@saulify.me')
 admin.role = 101
 admin.hash_password('saul')
 

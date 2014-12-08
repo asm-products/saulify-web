@@ -11,7 +11,6 @@ class LoginForm(Form):
 
 class AdUserForm(Form):
     id = HiddenField()
-    username = TextField('Username', [validators.Length(min=4, max=25)])
     email = TextField('Email Address', [validators.Length(min=6, max=35),
                                         validators.email()])
     password = PasswordField('Password', [validators.Required()])

@@ -8,24 +8,22 @@ def test_status_code(client):
 
 
 def test_login(client, add_user):
-    lg = client.post('/login', data=dict(username='test',
+    lg = client.post('/login', data=dict(email='test@saulify.me',
                      password='test'), follow_redirects=True)
     assert lg.status_code == 200
-    assert current_user.username == 'test'
+    assert current_user.email == 'test@saulify.me'
     soup = BeautifulSoup(lg.data)
     labels = soup.findAll('p')
     for p in labels:
         print p.text
-        if 'username' in p.text.lower():
-            assert p.text.split(':')[1] == add_user['username']
-        elif 'email' in p.text.lower():
+        if 'email' in p.text.lower():
             assert p.text.split(':')[1] == add_user['email']
         elif 'api' in p.text.lower():
             assert p.text.split(':')[1] == 'None'
 
 
 def test_incorrect_login(client):
-    lg = client.post('/login', data=dict(username='test',
+    lg = client.post('/login', data=dict(email='test@saulify.me',
                      password='incorrect'), follow_redirects=True)
     assert lg.status_code == 200
     assert current_user.is_active() is False
@@ -38,14 +36,14 @@ def test_user_page(client):
 
 
 def test_logout(client):
-    client.post('/login', data=dict(username='test',
+    client.post('/login', data=dict(email='test@saulify.me',
                 password='test'), follow_redirects=True)
     client.get(url_for('logout'), follow_redirects=True)
     assert current_user.is_active() is False
 
 
 def test_create_api_key(client):
-    client.post('/login', data=dict(username='test',
+    client.post('/login', data=dict(email='test@saulify.me',
                 password='test'), follow_redirects=True)
     print 'before create:{}'.format(current_user.api_key)
     assert current_user.api_key is None
@@ -55,7 +53,7 @@ def test_create_api_key(client):
 
 
 def test_revoke_api_key(client):
-    client.post('/login', data=dict(username='test',
+    client.post('/login', data=dict(email='test@saulify.me',
                 password='test'), follow_redirects=True)
     print 'before delete:{}'.format(current_user.api_key)
     assert current_user.api_key

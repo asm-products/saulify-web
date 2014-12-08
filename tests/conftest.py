@@ -29,7 +29,7 @@ def db(request):
 
 @pytest.fixture
 def add_user():
-    user_data = {'username': 'test', 'email': 'test@saulify.me'}
+    user_data = {'email': 'test@saulify.me'}
     user = User(**user_data)
     user.hash_password('test')
     test_db.session.add(user)
