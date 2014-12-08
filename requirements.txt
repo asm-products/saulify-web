@@ -27,3 +27,4 @@ flask-wtf
 passlib
 pytest
 pytest-flask
+flask-principal
