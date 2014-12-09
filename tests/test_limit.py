@@ -5,7 +5,7 @@ from saulify.common import ratelimit
 @ratelimit(2,60)
 def test_route():
     '''
-    a very simple route that will 
+    a very simple route that will be called until it reach the limit
     '''
     return 'ok'
 
