@@ -1,5 +1,5 @@
 from flask import request, render_template, redirect, url_for, Markup, \
-    abort, jsonify, g, flash, current_app, session
+    abort, jsonify, g, flash, make_response, current_app, session
 from newspaper import Article
 from flask.ext.login import login_user, logout_user, current_user, \
     login_required
@@ -11,7 +11,7 @@ from xml.etree import ElementTree
 import html2text
 import markdown2
 from functools import wraps
-from saul import api_key_gen
+from common import api_key_gen, ratelimit, get_rate_limit, LIMIT_METHOD_USER, LIMIT_METHOD_API
 from forms import AdUserForm
 import json
 
@@ -19,6 +19,7 @@ import json
 MEMBER = 100
 ADMIN = 101
 admin = Permission(RoleNeed('admin'))
+
 
 
 @login_manager.user_loader
@@ -250,3 +251,17 @@ def unauthorized(error):
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
+
+
+@app.after_request
+def inject_x_rate_headers(response):
+    '''
+    Add headers before responding to user
+    .'''
+    limit = get_rate_limit()
+    if limit and limit.send_x_headers:
+        h = response.headers
+        h.add('X-RateLimit-Remaining', str(limit.remaining))
+        h.add('X-RateLimit-Limit', str(limit.limit))
+        h.add('X-RateLimit-Reset', str(limit.reset))
+    return response
