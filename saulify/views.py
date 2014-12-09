@@ -12,7 +12,7 @@ import html2text
 import markdown2
 from functools import wraps
 from common import api_key_gen, get_rate_limit
-from forms import AdUserForm
+from forms import AddUserForm
 import json
 
 
@@ -55,7 +55,7 @@ def revokekey(user):
 @app.route('/dashboard', methods=['GET', 'POST'])
 @admin.require(401)
 def dashboard():
-    form = AdUserForm(request.form)
+    form = AddUserForm(request.form)
     users = User.query.filter_by(role=100).all()
     return render_template('dashboard.html',
                            users=users, form=form)
@@ -64,7 +64,7 @@ def dashboard():
 @app.route('/adduser', methods=['POST'])
 @admin.require(401)
 def add_user():
-    form = AdUserForm(request.form)
+    form = AddUserForm(request.form)
     if form.validate():
         result = {}
         result['iserror'] = False
