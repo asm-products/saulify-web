@@ -1,17 +1,17 @@
 from flask import request, render_template, redirect, url_for, Markup, \
-    abort, jsonify, g, flash, make_response, current_app, session
+    abort, jsonify, g, flash, current_app, session
 from newspaper import Article
 from flask.ext.login import login_user, logout_user, current_user, \
     login_required
 from flask.ext.principal import Permission, RoleNeed, Identity, \
     AnonymousIdentity, identity_changed, UserNeed, identity_loaded
-from saulify import app, login_manager, db, principals
+from saulify import app, login_manager, db
 from models import User
 from xml.etree import ElementTree
 import html2text
 import markdown2
 from functools import wraps
-from common import api_key_gen, ratelimit, get_rate_limit, LIMIT_METHOD_USER, LIMIT_METHOD_API
+from common import api_key_gen, get_rate_limit
 from forms import AdUserForm
 import json
 
@@ -21,7 +21,6 @@ ADMIN = 101
 admin = Permission(RoleNeed('admin'))
 
 
-
 @login_manager.user_loader
 def load_user(id):
     return User.query.get(int(id))
@@ -29,13 +28,9 @@ def load_user(id):
 
 @identity_loaded.connect_via(app)
 def on_identity_loaded(sender, identity):
-    # Set the identity user object
     identity.user = current_user
-    # Add the UserNeed to the identity
     if hasattr(current_user, 'id'):
         identity.provides.add(UserNeed(current_user.id))
-        # Assuming the User model has a list of roles, update the
-        # identity with the roles that the user provides
         if current_user.role == MEMBER:
             identity.provides.add(RoleNeed('member'))
         if current_user.role == ADMIN:
@@ -178,10 +173,8 @@ def logout():
     return redirect(url_for('index'))
 
 
-# The actual decorator function
 def require_appkey(function):
     @wraps(function)
-    # the new, post-decoration function. Note *args and **kwargs here.
     def decorated_function(*args, **kwargs):
         if request.args.get('key') and \
            User.query.filter_by(api_key=request.args.get('key')).first():

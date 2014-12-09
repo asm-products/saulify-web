@@ -1,9 +1,9 @@
 from flask.ext.wtf import Form
-from wtforms import BooleanField, TextField, PasswordField, validators, HiddenField
+from wtforms import TextField, PasswordField, \
+    validators, HiddenField
 
 
 class LoginForm(Form):
-    """docstring for LoginForm"""
     def __init__(self, arg):
         super(LoginForm, self).__init__()
         self.arg = arg
