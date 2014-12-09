@@ -9,41 +9,41 @@
         </div>
     </div>
     <div class="col-md-8">
-        <div class="panel panel-default">
-            <div class="panel-heading">All users</div>
-                <div class="panel-body">
-                        <table class="table table-striped">
-                        <thead>
-            <tr>
-            <th>#id</th>
-            <th>Email</th>
-            <th>Api Key</th>
-            <th></th>
-            </tr>
-        </thead>
-        <tbody style="text-align: left; vertical-align: middle;">
-            {% for  user in users %}
-            <tr>
-            <td>{{ user.id }}</td>
-                <td>{{ user.email }}</td>
-                <td>{% if user.api_key %}
-                <a href="javascript:createkey('{{user.id}}');"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></a>
+      <div class="panel panel-default">
+        <div class="panel-heading">All users</div>
+          <div class="panel-body">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>#id</th>
+                  <th>Email</th>
+                  <th>Api Key</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody style="text-align: left; vertical-align: middle;">
+              {% for  user in users %}
+                <tr>
+                  <td>{{ user.id }}</td>
+                  <td>{{ user.email }}</td>
+                  <td>{% if user.api_key %}
+                    <a href="javascript:createkey('{{user.id}}');"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></a>
                     <a href="javascript:revokekey('{{user.id}}');"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></a>
                     {{ user.api_key }}
                     {% else %}
                     <a href="javascript:createkey('{{user.id}}');"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
-                {% endif %}
-                <td>
+                    {% endif %}</td>
+                  <td>
                     <a href="javascript:edituser('{{user.id}}');"><span class="glyphicon glyphicon-edit"></span></a>
                     <a href="javascript:deleteuser('{{user.id}}');"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
-            </tr>
-            {% endfor %}
-        </tbody>
+                </tr>
+              {% endfor %}
+              </tbody>
             </table>
-            </div>
-            </div>
-            </div>
+          </div>
         </div>
+      </div>
+    </div>
   </div>
 </div>
 <div class="modal fade" id="addUser" role="dialog">
