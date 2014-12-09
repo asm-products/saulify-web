@@ -242,12 +242,6 @@ def api():
                     'markdown': markdown})
 
 
-@app.errorhandler(401)
-def unauthorized(error):
-    return 'Please login as admin to see this page'
-    # TODO: template 401 unauthorised
-
-
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404

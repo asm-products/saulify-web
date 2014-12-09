@@ -19,7 +19,7 @@ def test_login(client, add_user):
         if 'email' in p.text.lower():
             assert p.text.split(':')[1] == add_user['email']
         elif 'api' in p.text.lower():
-            assert p.text.split(':')[1] == 'None'
+            assert p.text.split(':')[1] == ''
 
 
 def test_incorrect_login(client):

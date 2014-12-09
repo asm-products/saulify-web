@@ -5,7 +5,7 @@ import pytest
 import os
 
 
-SQLALCHEMY_TEST_DB = 'postgres://yothhvlrvgfnmv:40ZPCraMqclHpFtURZwLps-Pv-@ec2-23-23-80-55.compute-1.amazonaws.com:5432/d976il7m33b8kn'
+SQLALCHEMY_TEST_DB = os.environ.get('TEST_DATABASE_URL')
 
 
 @pytest.fixture
