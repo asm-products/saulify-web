@@ -2,48 +2,48 @@
 {% block body %}
 <div class="container landing-page">
   <div class="row">
-  	<div class="col-md-4">
-  		<div class="well" style="max-width: 400px; margin: 0 auto 10px;">
-      	<a href="#" class="btn btn-default btn-md btn-block" id="add_user_add">Add User</a>
-      	<a href="/logout" class="btn btn-default btn-md btn-block" role="button">Logout</a>
-    	</div>
+    <div class="col-md-4">
+        <div class="well" style="max-width: 400px; margin: 0 auto 10px;">
+        <a href="#" class="btn btn-default btn-md btn-block" id="add_user_add">Add User</a>
+        <a href="/logout" class="btn btn-default btn-md btn-block" role="button">Logout</a>
+        </div>
     </div>
     <div class="col-md-8">
-    	<div class="panel panel-default">
-  			<div class="panel-heading">All users</div>
-  				<div class="panel-body">
-						<table class="table table-striped">
-  						<thead>
-        	<tr>
-          	<th>#id</th>
-          	<th>Email</th>
-          	<th>Api Key</th>
-          	<th></th>
-        	</tr>
-      	</thead>
-      	<tbody style="text-align: left; vertical-align: middle;">
-      		{% for  user in users %}
-        	<tr>
-          	<td>{{ user.id }}</td>
-       			<td>{{ user.email }}</td>
-      			<td>{% if user.api_key %}
-      			<a href="javascript:createkey('{{user.id}}');"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></a>
-     				<a href="javascript:revokekey('{{user.id}}');"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></a>
-     				{{ user.api_key }}
-     				{% else %}
-     				<a href="javascript:createkey('{{user.id}}');"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
-      			{% endif %}
-      			<td>
-      				<a href="javascript:edituser('{{user.id}}');"><span class="glyphicon glyphicon-edit"></span></a>
-      				<a href="javascript:deleteuser('{{user.id}}');"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
-        	</tr>
-        	{% endfor %}
-      	</tbody>
-			</table>
-			</div>
-			</div>
-			</div>
-		</div>
+        <div class="panel panel-default">
+            <div class="panel-heading">All users</div>
+                <div class="panel-body">
+                        <table class="table table-striped">
+                        <thead>
+            <tr>
+            <th>#id</th>
+            <th>Email</th>
+            <th>Api Key</th>
+            <th></th>
+            </tr>
+        </thead>
+        <tbody style="text-align: left; vertical-align: middle;">
+            {% for  user in users %}
+            <tr>
+            <td>{{ user.id }}</td>
+                <td>{{ user.email }}</td>
+                <td>{% if user.api_key %}
+                <a href="javascript:createkey('{{user.id}}');"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></a>
+                    <a href="javascript:revokekey('{{user.id}}');"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></a>
+                    {{ user.api_key }}
+                    {% else %}
+                    <a href="javascript:createkey('{{user.id}}');"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+                {% endif %}
+                <td>
+                    <a href="javascript:edituser('{{user.id}}');"><span class="glyphicon glyphicon-edit"></span></a>
+                    <a href="javascript:deleteuser('{{user.id}}');"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+            </table>
+            </div>
+            </div>
+            </div>
+        </div>
   </div>
 </div>
 <div class="modal fade" id="addUser" role="dialog">
@@ -55,8 +55,8 @@
       </div>
       <div class="modal-body">
       <form action="" method=post id="adduserform" role="form">
-  			{{ form.hidden_tag() }}
-  			{{ form.id }}
+            {{ form.hidden_tag() }}
+            {{ form.id }}
         <div class="control-group">
           <div class="controls">
             {{ form.email(class="form-control", placeholder="Enter email") }}
@@ -121,7 +121,7 @@ function edituser(id)
     }
 
 function deleteuser(user_id){
-	bootbox.confirm("<strong>User deletion</strong><p>You can't undo this action. Are you sure?</p>", function(result){
+    bootbox.confirm("<strong>User deletion</strong><p>You can't undo this action. Are you sure?</p>", function(result){
      if(result)
         {
     $.ajax({
@@ -134,7 +134,7 @@ function deleteuser(user_id){
 }
 });
 }
-		$("#add_user_add").click(function(){
+        $("#add_user_add").click(function(){
         $("#email").val("");
         $("#password").val("");
         $("#error_email").text("");
