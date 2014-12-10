@@ -7,6 +7,7 @@ from saulify import app
 from functools import wraps
 from flask.ext.login import current_user
 
+
 def api_key_gen():
     hash_key = hashlib.sha256(str(random.getrandbits(256))).digest()
     rand_symb = random.choice(['rA', 'aZ', 'gQ', 'hH', 'hG', 'aR', 'DD'])
@@ -15,8 +16,11 @@ def api_key_gen():
 # May it be "clean" function here (from view show_article)
 
 '''
-The rating code is based on http://flask.pocoo.org/snippets/70/ and http://python-eve.org/
+The rating code is based on
+http://flask.pocoo.org/snippets/70/ and http://python-eve.org/
 '''
+
+
 class RateLimit(object):
     """ Implements the Rate-Limiting logic using Redis as a backend.
 

@@ -27,4 +27,5 @@ flask-wtf
 passlib
 pytest
 pytest-flask
+flask-principal
 redis==2.10.3
