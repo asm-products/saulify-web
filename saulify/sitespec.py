@@ -72,7 +72,8 @@ def load_testcases(fpath):
     cases = []
 
     with open(fpath) as f:
-        for line in f:
+        for line_str in f:
+            line = line_str.decode("utf-8")
             (label, content) = parse_specline(line)
             if label == "test_url":
                 url = content
