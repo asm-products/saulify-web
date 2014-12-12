@@ -1,6 +1,8 @@
 """ Reading and representation of Instapaper spec files. """
 
 import sys
+import urlparse
+import lxml.html
 
 from saulify.clean import clean_content
 
@@ -13,18 +15,23 @@ class TestCase(object):
       url (str): URL of the page being tested
       fragments (list of str): Fragments of text that should be present in
         the output of the scraper.
+      images (list of str): Urls of images that should be present in the output.
     """
 
     def __init__(self, url):
         self.url = url
         self.fragments = []
+        self.images = []
 
     def add_contains(self, fragment):
         self.fragments.append(fragment)
 
+    def add_image(self, href):
+        self.images.append(href)
+
     def run(self):
         try:
-            output = clean_content(self.url)["plaintext"]
+            output = clean_content(self.url)
         except Exception as e:
             sys.stderr.write("Exception on " + self.url + " :\n")
             sys.stderr.write(str(e))
@@ -37,7 +44,8 @@ class TestCase(object):
             return {
                 "url": self.url,
                 "status": "OK",
-                "missing_fragments": self.missing_fragments(output),
+                "missing_fragments": self.missing_fragments(output["plaintext"]),
+                "missing_images": self.missing_images(output["html"]),
             }
 
     def missing_fragments(self, text):
@@ -45,6 +53,17 @@ class TestCase(object):
         for s in self.fragments:
             if s not in text:
                 missing.append(s)
+        return missing
+
+    def missing_images(self, html):
+        etree = lxml.html.fromstring(html)
+        img_rel_urls = etree.xpath("//img/@src")
+        img_abs_urls = [urlparse.urljoin(self.url, u) for u in img_rel_urls]
+        missing = []
+        for url in self.images:
+            abs_url = urlparse.urljoin(self.url, url)
+            if abs_url not in img_abs_urls:
+                missing.append(url)
         return missing
 
 
@@ -84,5 +103,9 @@ def load_testcases(fpath):
                     raise Exception("Invalid spec file: " + fpath)
                 fragment = content
                 cases[-1].add_contains(fragment)
+            elif label == "test_contains_image":
+                if not cases:
+                    raise Exception("Invalid spec file: " + fpath)
+                cases[-1].add_image(content)
 
     return cases
