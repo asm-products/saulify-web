@@ -1,0 +1,3 @@
+test_url: http://www.psychologytoday.com/articles/200910/what-makes-marriage-work
+test_contains: Denying Responsibility. No matter what your partner charges, you insist in no uncertain terms that you are not to blame.
+test_contains: In addition, listening or speaking without being defensive helps to counter several destructive habits
