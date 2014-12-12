@@ -102,14 +102,13 @@ def load_testcases(fpath):
                 url = content
                 case = TestCase(url)
                 cases.append(case)
-            elif label == "test_contains":
+            elif label.startswith("test_"):
                 if not cases:
                     raise Exception("Invalid spec file: " + fpath)
-                fragment = content
-                cases[-1].add_contains(fragment)
-            elif label == "test_contains_image":
-                if not cases:
-                    raise Exception("Invalid spec file: " + fpath)
-                cases[-1].add_image(content)
+                opencase = cases[-1]
+                if label == "test_contains":
+                    opencase.add_contains(content)
+                elif label == "test_contains_image":
+                    opencase.add_image(content)
 
     return cases
