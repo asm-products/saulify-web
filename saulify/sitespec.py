@@ -44,27 +44,31 @@ class TestCase(object):
             return {
                 "url": self.url,
                 "status": "OK",
-                "missing_fragments": self.missing_fragments(output["plaintext"]),
-                "missing_images": self.missing_images(output["html"]),
+                "fragments": self.check_fragments(output["plaintext"]),
+                "images": self.check_images(output["html"]),
             }
 
-    def missing_fragments(self, text):
-        missing = []
+    def check_fragments(self, text):
+        result = {"missing": [], "found": []}
         for s in self.fragments:
-            if s not in text:
-                missing.append(s)
-        return missing
+            if s in text:
+                result["found"].append(s)
+            else:
+                result["missing"].append(s)
+        return result
 
-    def missing_images(self, html):
+    def check_images(self, html):
         etree = lxml.html.fromstring(html)
         img_rel_urls = etree.xpath("//img/@src")
         img_abs_urls = [urlparse.urljoin(self.url, u) for u in img_rel_urls]
-        missing = []
+        result = {"missing": [], "found": []}
         for url in self.images:
             abs_url = urlparse.urljoin(self.url, url)
-            if abs_url not in img_abs_urls:
-                missing.append(url)
-        return missing
+            if abs_url in img_abs_urls:
+                result["found"].append(url)
+            else:
+                result["missing"].append(url)
+        return result
 
 
 def load_testcases(fpath):
