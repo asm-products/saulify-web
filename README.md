@@ -1,5 +1,6 @@
-### Saulify for Web
-===
+## Saulify for Web
+
+<a href="https://assembly.com/saulify/bounties"><img src="https://asm-badger.herokuapp.com/saulify/badges/tasks.svg" height="24px" alt="Open Tasks" /></a>
 
 Got a hard-to-read website? [Better call Saul](http://saulify.me) to clean it up!
 
