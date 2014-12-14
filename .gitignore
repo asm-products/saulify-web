@@ -12,6 +12,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
+.env
 env/
 build/
 develop-eggs/
@@ -59,4 +60,3 @@ target/
 =======
 # Mac OS X custom attribute files
 .DS_Store
-
