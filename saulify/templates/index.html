@@ -1,30 +1,98 @@
 {% extends "layout.html" %}
 {% block body %}
-  <div class="container landing-page">
-    <div class="row">
-      <div class="col-md-6 col-md-offset-3">
-        <img src="{{ url_for('static', filename='img/logo.png') }}" width='150' height='150' alt="Saulify"/>
-      </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-6 col-md-offset-3">
-            <form action="{{ url_for('show_article') }}" method=get>
-                <div class="form-group">
-                    <div class="col-md-12">
-                        <input class="form-control input-lg" type="url" name="u" placeholder="Paste the URL of an article to clean up and share!">
-                    </div>
-                    <div class="col-md-12">
-                        <br />
-                        <button class="btn btn-success btn-lg">Clean it!</button>
-                    </div>
-                    <div class="col-md-12">
-                        <br /><br /><br />
-                        Or drag this <a class="bookmarklet" title="Saulify" href='javascript:(function()%7Bwindow.baseUrl%3D"%2F%2Fsaulify.me"%3Bvar e%3Ddocument.createElement("script")%3Be.setAttribute("type"%2C"text%2Fjavascript")%3Be.setAttribute("charset"%2C"UTF-8")%3Be.setAttribute("src"%2CbaseUrl%2B"%2Fstatic%2Fjs%2Fsaulify_browser.js")%3Bdocument.documentElement.appendChild(e)%7D)()'>Saulify Bookmarklet</a> link to your bookmarks bar.
-                   </div>
-                </div>
-            </form>
+  <section class="header">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 text-center">
+                <a href="javascript:void(0)">
+                    <img src="{{ url_for('static', filename='img/logo.png') }}" class="header-logo img-responsive" width="130" alt="Saulify logo">
+                </a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 text-center">
+                <h1>Generate clean, responsive articles with just a click.</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2 text-center">
+                <form action="{{ url_for('show_article') }}" method=get>
+                    <input type="url" name="u" class="form-control u-input" placeholder="Paste the URL of an article to clean up and share!">
+                    <button class="btn btn-default btn-saul">Clean It <i class="fa fa-chevron-right"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="header-learn-more">
+                <a href="javascript:void(0)" class="js-learn-more"><i class="fa fa-chevron-down fa-3x"></i></a>
+            </div>
         </div>
     </div>
-  <div>
+  </section>
+
+  <section class="main">
+      <div class="container">
+          <div class="row">
+              <div class="col-sm-8 col-sm-offset-2 text-center">
+                  <h2>Saving good information from bad presentation.</h2>
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-sm-8 col-sm-offset-2 text-center">
+                  <img src="{{ url_for('static', filename='img/hero.png') }}" alt="Saulify hero" class="img-responsive">
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-sm-8 col-sm-offset-2 text-center">
+                  <h3>Goodbye, tiny text... Hello, good looking!</h3>
+                  <p>Let's face it: there are a lot of ugly websites out there that need saving. Saulify can be that hero. We beautify messy articles, letting you focus on what's important to you without the noise.</p>
+              </div>
+          </div>
+      </div>
+  </section>
+
+  <section class="features">
+      <div class="container">
+          <div class="row">
+              <div class="col-sm-4">
+                  <div class="features-box">
+                      <h4>Fully Responsive</h4>
+                      <p>Your cleaned up articles will look great on any device, with beautiful typography for easy reading.</p>
+                  </div>
+              </div>
+              <div class="col-sm-4">
+                  <div class="features-box">
+                      <h4>Future Proofing</h4>
+                      <p>Easily convert your articles or blog posts to Markdown and take back control of their presentation.</p>
+                  </div>
+              </div>
+              <div class="col-sm-4">
+                  <div class="features-box">
+                      <h4>Sharing is Caring</h4>
+                      <p>Send your cleaned up articles to friends and family, without the embarrassment of a messy page.</p>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </section>
+
+  <section class="footer">
+      <div class="container">
+          <div class="row">
+              <div class="col-sm-8 col-sm-offset-2 text-center">
+                  <form action="{{ url_for('show_article') }}" method=get>
+                    <input type="url" name="u" class="form-control u-input" placeholder="Paste the URL of an article to clean up and share!">
+                    <button class="btn btn-default btn-saul">Clean It <i class="fa fa-chevron-right"></i>
+                    </button>
+                  </form>
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-sm-8 col-sm-offset-2 text-center">
+                  <p><b>Saulify</b> © 2014. Made by the <a href="http://www.assembly.com">Assembly Community</a>.</p>
+              </div>
+          </div>
+      </div>
+  </section>
 {% endblock %}
