@@ -44,8 +44,10 @@ class TestCase(object):
             return {
                 "url": self.url,
                 "status": "OK",
-                "fragments": self.check_fragments(output["plaintext"]),
-                "images": self.check_images(output["html"]),
+                "result": {
+                    "fragments": self.check_fragments(output["plaintext"]),
+                    "images": self.check_images(output["html"]),
+                }
             }
 
     def check_fragments(self, text):
