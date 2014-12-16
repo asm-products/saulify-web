@@ -49,8 +49,8 @@ Please follow these steps:
 - Link your GitHub account to your Assembly account in your profile settings.
 - Fork this repo [asm-products/saulify-web](https://github.com/asm-products/saulify-web)
 - [Find a bounty](https://assembly.com/saulify/bounties) you'd like to work on (or create a new one) and commit your code to your fork
-- Open up a new pull request on Github and let us know what bounty the code changes are for.
-- We'll review the code, give any feedback, merge it, and award you the bounty!
+- Open up a new pull request on Github into the `development` branch and let us know what bounty the code changes are for.
+- We'll review the code, give any feedback, merge it, and award you the bounty (which gives you ownership over Saulify)!
 
 ===
 
