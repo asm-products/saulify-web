@@ -9,7 +9,9 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
 
 # heroku addons:add rediscloud
-url = urlparse.urlparse(os.environ.get('REDISCLOUD_URL'))
-REDIS_HOST = url.hostname
-REDIS_PORT = url.port
-REDIS_PASS = url.password
+REDISCLOUD_URL = os.environ.get('REDISCLOUD_URL')
+if REDISCLOUD_URL:
+  url = urlparse.urlparse(REDISCLOUD_URL)
+  REDIS_HOST = url.hostname
+  REDIS_PORT = url.port
+  REDIS_PASS = url.password
