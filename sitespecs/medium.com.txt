@@ -1,0 +1,3 @@
+test_url: https://medium.com/@iwasrobbed/the-possibility-of-the-impossible-57d142cc3dd3
+test_contains: At the beginning, I thought I was reasonably successful at being an adult.
+test_contains: Why can’t we be proud of our children for just being happy and teach them how to nurture that happiness rather than sacrificing it for the sake of fitting into a certain mold?

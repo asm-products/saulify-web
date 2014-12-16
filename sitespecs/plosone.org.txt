@@ -1,0 +1,5 @@
+test_url: http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0079454
+test_contains: Yet, from a temporal dynamic perspective, memory traces are real-time transient activity patterns
+test_contains: To examine the contributions of neurons to transient ensemble patterns, we shuffled spike trains of the perspective units
+test_contains_image: http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0079454.g002&representation=PNG_I
+test_contains_image: http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0079454.e016&representation=PNG
