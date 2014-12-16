@@ -1,11 +1,13 @@
 import os
 import json
 import argparse
+import colorama
 
 import saulify.sitespec as sitespec
 
 SPEC_DIRECTORY = "sitespecs"
 
+colorama.init()
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-p", "--pretty", help="Pretty print test results",
@@ -34,7 +36,13 @@ def print_report(report):
     else:
         result = "EXCEPTION"
 
-    print("{0} : {1}".format(result, report["url"]))
+    result_colors = {
+        "PASS": colorama.Fore.GREEN,
+        "FAIL": colorama.Fore.RED,
+        "EXCEPTION": colorama.Fore.RED
+    }
+
+    print(result_colors[result] + "{0} : {1}".format(result, report["url"]))
 
     if report["status"] == "EXCEPTION":
         print(report["message"])
