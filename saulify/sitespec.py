@@ -38,7 +38,7 @@ class TestCase(object):
             return {
                 "url": self.url,
                 "status": "EXCEPTION",
-                "message": "e.message"
+                "message": e.message
             }
         else:
             return {
