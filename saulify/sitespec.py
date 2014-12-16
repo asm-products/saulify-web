@@ -1,6 +1,5 @@
 """ Reading and representation of Instapaper spec files. """
 
-import sys
 import urlparse
 import lxml.html
 
@@ -33,8 +32,6 @@ class TestCase(object):
         try:
             output = clean_content(self.url)
         except Exception as e:
-            sys.stderr.write("Exception on " + self.url + " :\n")
-            sys.stderr.write(str(e))
             return {
                 "url": self.url,
                 "status": "EXCEPTION",
