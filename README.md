@@ -23,8 +23,21 @@ To install it locally:
 
 Note: Saulify uses the [Newspaper](https://github.com/codelucas/newspaper) library for scraping website articles. If you have trouble installing it on Mac OS X Yosemite during the `pip install` process above, please see this [Github issue](https://github.com/codelucas/newspaper/issues/79) for helpful info.
 
-
 More info here for [getting started w/ Python on Heroku](https://devcenter.heroku.com/articles/getting-started-with-python-o).
+
+#### Testing
+
+Saulify uses the [pytest](http://pytest.org) framework for making sure we keep clear of new bugs and regressions and these tests can be found in the `/tests` directory. You can run the test suite via the command line using:
+
+```shell
+$ py.test
+```
+
+Also, we have a secondary test script for verifying the accuracy of the article scraper recipes. You can run that script via the command line using:
+
+```shell
+$ python runreport.py -p
+```
 
 #### Contributing
 
