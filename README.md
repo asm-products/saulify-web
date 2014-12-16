@@ -1,5 +1,6 @@
-### Saulify for Web
-===
+## Saulify for Web
+
+<a href="https://assembly.com/saulify/bounties"><img src="https://asm-badger.herokuapp.com/saulify/badges/tasks.svg" height="24px" alt="Open Tasks" /></a>
 
 Got a hard-to-read website? [Better call Saul](http://saulify.me) to clean it up!
 
@@ -9,7 +10,7 @@ Saulify runs on Heroku: [http://saulify.heroku.com](http://saulify.heroku.com)
 
 Saulify is built on [Python](https://www.python.org/) using the [Flask](http://flask.pocoo.org/docs/0.10/) micro-framework. 
 
-To install it:
+To install it locally:
 
 - [Clone this Github repo](https://help.github.com/articles/fetching-a-remote/) to your local computer.
 - Install [Heroku Toolbelt](https://toolbelt.heroku.com/) and ensure you create a Heroku account if you don't have one already.
@@ -17,13 +18,26 @@ To install it:
 - Use `mkvirtualenv saulify` to create a new virtual environment for the project. This will ensure all of your Python libraries are installed properly without conflict.
 - Use `cd <saulify folder path>` to change to the Saulify directory and then `workon saulify` to switch to the Saulify virtual environment you created previously.
 - Use `pip install -r requirements.txt` to install the 3rd party dependencies, such as Flask, et. al.
-- Add to your Heroku project a Redis instance `heroku addons:add rediscloud` (your account must have a registered credit card). 
+- Set up a `.env` file in the root Saulify directory with the environment variables taken from the Heroku config: https://devcenter.heroku.com/articles/config-vars (Ask a team member to send you the file if you don't have access)
 - Type `foreman run python runserver.py` (for development) or `foreman start` (for production) at the command line to start the local server.
 
 Note: Saulify uses the [Newspaper](https://github.com/codelucas/newspaper) library for scraping website articles. If you have trouble installing it on Mac OS X Yosemite during the `pip install` process above, please see this [Github issue](https://github.com/codelucas/newspaper/issues/79) for helpful info.
 
-
 More info here for [getting started w/ Python on Heroku](https://devcenter.heroku.com/articles/getting-started-with-python-o).
+
+#### Testing
+
+Saulify uses the [pytest](http://pytest.org) framework for making sure we keep clear of new bugs and regressions and these tests can be found in the `/tests` directory. You can run the test suite via the command line using:
+
+```shell
+$ py.test
+```
+
+Also, we have a secondary test script for verifying the accuracy of the article scraper recipes. You can run that script via the command line using:
+
+```shell
+$ python runreport.py -p
+```
 
 #### Contributing
 
