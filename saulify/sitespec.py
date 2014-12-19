@@ -1,5 +1,6 @@
 """ Reading and representation of Instapaper spec files. """
 
+import io
 import urlparse
 import lxml.html
 
@@ -93,9 +94,8 @@ def load_testcases(fpath):
 
     cases = []
 
-    with open(fpath) as f:
-        for line_str in f:
-            line = line_str.decode("utf-8")
+    with io.open(fpath, encoding="utf-8") as f:
+        for line in f:
             (label, content) = parse_specline(line)
             if label == "test_url":
                 url = content
