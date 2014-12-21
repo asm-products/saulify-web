@@ -1,9 +1,31 @@
 """ Reading and representation of Instapaper spec files. """
 
+import re
 import urlparse
 import lxml.html
 
 from saulify.clean import clean_content
+
+
+def parse_specfile(f):
+    """
+    Parses Instapaper spec file into its component directives
+
+    Args:
+      f (file): Spec file object
+
+    Returns:
+      List of (label, content) tuples representing directives
+    """
+
+    r = re.compile("(?P<label>[^#:]+):(?P<content>[^#]+)")
+
+    for t in f.read().splitlines():
+        m = r.match(t)
+        if m:
+            label = m.group("label").strip()
+            content = m.group("content").strip()
+            yield (label, content)
 
 
 class TestCase(object):
@@ -85,16 +107,9 @@ def load_testcases(f):
       A list of ``TestCase`` objects.
     """
 
-    def parse_specline(line):
-        parts = line.partition(':')
-        label = parts[0]
-        content = parts[2].strip()
-        return (label, content)
-
     cases = []
 
-    for line in f:
-        (label, content) = parse_specline(line)
+    for label, content in parse_specfile(f):
         if label == "test_url":
             url = content
             case = TestCase(url)
