@@ -1,3 +1,4 @@
+import io
 import os
 import json
 import argparse
@@ -64,11 +65,12 @@ def print_report(report):
 if __name__ == "__main__":
     for fname in os.listdir(SPEC_DIRECTORY):
         fpath = os.path.join(SPEC_DIRECTORY, fname)
-        test_cases = sitespec.load_testcases(fpath)
-        for test_case in test_cases:
-            report = test_case.run()
-            if args.pretty:
-                print_report(report)
-                print("\n")
-            else:
-                print(json.dumps(report))
+        with io.open(fpath, encoding="utf-8") as f:
+            test_cases = sitespec.load_testcases(f)
+            for test_case in test_cases:
+                report = test_case.run()
+                if args.pretty:
+                    print_report(report)
+                    print("\n")
+                else:
+                    print(json.dumps(report))

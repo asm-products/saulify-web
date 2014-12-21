@@ -1,6 +1,5 @@
 """ Reading and representation of Instapaper spec files. """
 
-import io
 import urlparse
 import lxml.html
 
@@ -71,7 +70,7 @@ class TestCase(object):
         return result
 
 
-def load_testcases(fpath):
+def load_testcases(f):
     """
     Reads test cases from an Instapaper spec file.
 
@@ -80,7 +79,7 @@ def load_testcases(fpath):
     Multiple test cases in a single file are supported.
 
     Args:
-      fpath: Path to the spec file.
+      f (file): Spec file object
 
     Returns:
       A list of ``TestCase`` objects.
@@ -94,20 +93,19 @@ def load_testcases(fpath):
 
     cases = []
 
-    with io.open(fpath, encoding="utf-8") as f:
-        for line in f:
-            (label, content) = parse_specline(line)
-            if label == "test_url":
-                url = content
-                case = TestCase(url)
-                cases.append(case)
-            elif label.startswith("test_"):
-                if not cases:
-                    raise Exception("Invalid spec file: " + fpath)
-                opencase = cases[-1]
-                if label == "test_contains":
-                    opencase.add_contains(content)
-                elif label == "test_contains_image":
-                    opencase.add_image(content)
+    for line in f:
+        (label, content) = parse_specline(line)
+        if label == "test_url":
+            url = content
+            case = TestCase(url)
+            cases.append(case)
+        elif label.startswith("test_"):
+            if not cases:
+                raise Exception("Invalid spec file")
+            opencase = cases[-1]
+            if label == "test_contains":
+                opencase.add_contains(content)
+            elif label == "test_contains_image":
+                opencase.add_image(content)
 
     return cases
