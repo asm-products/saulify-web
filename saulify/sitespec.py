@@ -1,5 +1,7 @@
 """ Reading and representation of Instapaper spec files. """
 
+__all__ = ["load_rules", "load_testcases"]
+
 import re
 import collections
 
