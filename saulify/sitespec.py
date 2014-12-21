@@ -3,6 +3,7 @@
 import re
 import urlparse
 import lxml.html
+import collections
 
 from saulify.clean import clean_content
 
@@ -124,3 +125,44 @@ def load_testcases(f):
                 opencase.add_image(content)
 
     return cases
+
+
+def load_rules(f):
+    """
+    Reads scraping rules from Instapaper spec file.
+
+    The scraping rules are stored in a dictionary. For simple directives
+    like `strip`, the rules are stored in a list using the directive name as
+    the key. Exceptions to this storage format are detailed below.
+
+    `find_string` / `replace_string` :
+        These directives come in pairs; one find regular expression and one
+        replace. Stored as a list of 2-tuples under the key `"find_replace"`.
+
+    Args:
+      f (file): Spec file object
+
+    Returns:
+      Dictionary containing scraper rules.
+    """
+
+    rules = collections.defaultdict(list)
+    find_string = None
+
+    for label, content in parse_specfile(f):
+
+        if label.startswith("test_"):
+            continue
+
+        if label == "find_string":
+            find_string = content
+
+        elif label == "replace_string":
+            if not find_string:
+                raise Exception("Invalid spec file")
+            rules["find_replace"].append((find_string, content))
+
+        else:
+            rules[label].append(content)
+
+    return rules
