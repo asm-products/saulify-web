@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 from flask import Markup
 from newspaper import Article
 from xml.etree import ElementTree
