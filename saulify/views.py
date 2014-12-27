@@ -1,15 +1,11 @@
-from flask import request, render_template, redirect, url_for, Markup, \
+from flask import request, render_template, redirect, url_for, \
     abort, jsonify, g, flash, current_app, session
-from newspaper import Article
 from flask.ext.login import login_user, logout_user, current_user, \
     login_required
 from flask.ext.principal import Permission, RoleNeed, Identity, \
     AnonymousIdentity, identity_changed, UserNeed, identity_loaded
 from saulify import app, login_manager, db
 from models import User
-from xml.etree import ElementTree
-import html2text
-import markdown2
 from functools import wraps
 from common import api_key_gen, get_rate_limit
 from forms import AddUserForm
