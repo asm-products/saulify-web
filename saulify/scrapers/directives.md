@@ -3,49 +3,58 @@ Grepped from the repository at https://github.com/fivefilters/ftr-site-config
 Some documentation available at http://help.fivefilters.org/customer/portal/articles/223153-site-patterns
 
 
+# Key
+
+Before each directive, we state its level of support in the `InstapaperScraper`.
+
+- S : Supported
+- P : Planned
+- U : Unsupported
+
+
 # Article Components
 
-author
-body
-date
-title
-footnotes
+(S) author
+(S) body
+(S) date
+(S) title
+(S) footnotes
 
-native_ad_clue
+(U) native_ad_clue
 
 
 # Cleaning
 
-strip
-strip_comments
-strip_id_or_class
-strip_image_src
+(S) strip
+(U) strip_comments
+(S) strip_id_or_class
+(P) strip_image_src
 
-convert_double_br_tags
+(U) convert_double_br_tags
 
-find_string
-replace_string
+(S) find_string
+(S) replace_string
 
-tidy
-prune
+(U) tidy
+(U) prune
 
 
 # Navigation
 
-next_page_link
-single_page_link
-single_page_link_in_feed
+(P) next_page_link
+(P) single_page_link
+(P) single_page_link_in_feed
 
 
 # Testing
 
-test_contains
-test_url
+(S) test_contains
+(S) test_url
 
 
 # Unknown / Other
 
-autodetect_next_page
-autodetect_on_failure
+(U) autodetect_next_page
+(U) autodetect_on_failure
 
-dissolve
+(U) dissolve
