@@ -12,21 +12,18 @@ class TestCase(object):
 
     Attributes:
       url (str): URL of the page being tested
-      fragments (list of str): Fragments of text that should be present in
-        the output of the scraper.
-      images (list of str): Urls of images that should be present in the output.
     """
 
-    def __init__(self, url):
-        self.url = url
-        self.fragments = []
-        self.images = []
+    def __init__(self, spec):
+        """ Create a new TestCase object.
 
-    def add_contains(self, fragment):
-        self.fragments.append(fragment)
-
-    def add_image(self, href):
-        self.images.append(href)
+        Args:
+            spec (defaultdict of list): Dictionary containing test directives
+            as returned by `saulify.sitespec.load_testcases`. Must contain a
+            `"test_url"` key.
+        """
+        self.url = spec["test_url"]
+        self._spec = spec
 
     def run(self):
         try:
@@ -49,7 +46,7 @@ class TestCase(object):
 
     def check_fragments(self, text):
         result = {"missing": [], "found": []}
-        for s in self.fragments:
+        for s in self._spec["test_contains"]:
             if s in text:
                 result["found"].append(s)
             else:
@@ -61,7 +58,7 @@ class TestCase(object):
         img_rel_urls = etree.xpath("//img/@src")
         img_abs_urls = [urlparse.urljoin(self.url, u) for u in img_rel_urls]
         result = {"missing": [], "found": []}
-        for url in self.images:
+        for url in self._spec["test_contains_images"]:
             abs_url = urlparse.urljoin(self.url, url)
             if abs_url in img_abs_urls:
                 result["found"].append(url)

@@ -34,31 +34,27 @@ def load_testcases(f):
     Reads test cases from an Instapaper spec file.
 
     Scans file until it reaches a line labelled "test_url", then creates a
-    new ``TestCase`` object. Subsequent lines populate the test case.
+    new test spec dictionary. Subsequent lines populate the test dictionary.
     Multiple test cases in a single file are supported.
 
     Args:
       f (file): Spec file object
 
     Returns:
-      A list of ``TestCase`` objects.
+      List of dictionaries specifying each test case.
     """
 
     cases = []
 
     for label, content in parse_specfile(f):
         if label == "test_url":
-            url = content
-            case = TestCase(url)
+            case = collections.defaultdict(list, (label, content))
             cases.append(case)
         elif label.startswith("test_"):
             if not cases:
                 raise Exception("Invalid spec file")
             opencase = cases[-1]
-            if label == "test_contains":
-                opencase.add_contains(content)
-            elif label == "test_contains_image":
-                opencase.add_image(content)
+            opencase[label].append(content)
 
     return cases
 
