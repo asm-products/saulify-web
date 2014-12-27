@@ -5,8 +5,6 @@ __all__ = ["load_rules", "load_testcases"]
 import re
 import collections
 
-from saulify.testcase import TestCase
-
 
 def parse_specfile(f):
     """
