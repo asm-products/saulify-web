@@ -68,7 +68,7 @@ def load_superdomains(hostname):
     """ Load the most specific spec file applicable to the given hostname.
 
     Peels off sub-hosts one at a time and searches for spec files defined for
-    each level.
+    each level. Does not accept spec files that contain no rules.
 
     Args:
         hostname (str): Hostname for which to find an applicable spec file.
@@ -78,14 +78,21 @@ def load_superdomains(hostname):
         or `None` if no spec files were available for the given host.
     """
 
-    try:
-        return load_sitespec(hostname)
-    except IOError:
+    def recurse():
         super_domain = hostname.partition(".")[2]
         if super_domain:
             return load_superdomains(super_domain)
         else:
             return None
+
+    try:
+        d = load_sitespec(hostname)
+        if d:
+            return d
+        else:
+            return recurse()
+    except IOError:
+        return recurse()
 
 
 def load_sitespec(hostname):
