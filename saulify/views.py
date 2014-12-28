@@ -11,7 +11,7 @@ from common import api_key_gen, get_rate_limit
 from forms import AddUserForm
 import json
 
-from saulify.scrapers.newspaper import clean_url
+from saulify.scrapers.cascade import clean_url
 
 
 MEMBER = 100

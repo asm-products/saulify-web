@@ -4,7 +4,7 @@ import re
 import urlparse
 import lxml.html
 
-from saulify.scrapers.newspaper import clean_url
+from saulify.scrapers.cascade import clean_url
 
 
 class TestCase(object):
