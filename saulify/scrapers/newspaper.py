@@ -1,11 +1,7 @@
 from __future__ import absolute_import
 
-from flask import Markup
 from newspaper import Article
 from xml.etree import ElementTree
-
-import markdown2
-import html2text
 
 
 def clean_url(url_to_clean):
@@ -66,13 +62,9 @@ def construct_result(article):
     """
 
     html_string = ElementTree.tostring(article.clean_top_node)
-    markdown = html2text.HTML2Text().handle(html_string)
-    article_html = Markup(markdown2.markdown(markdown))
 
     return {
-        'html': article_html,
+        'html': html_string,
         'authors': str(', '.join(article.authors)),
         'title': article.title,
-        'plaintext': markdown.replace('\n', ' '),
-        'markdown': markdown
     }

@@ -54,8 +54,11 @@ def scraper_cascade(url, content):
     if result is None:
         return None
 
-    # Add markdown
+    # Add markdown (and plaintext)
     result["markdown"] = html2text.HTML2Text().handle(result["html"])
+    # TODO: Investigate the most apropriate method of converting markdown
+    # to plaintext.
+    result["plaintext"] = result["markdown"].replace('\n', ' ')
 
     return result
 
