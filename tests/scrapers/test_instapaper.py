@@ -142,3 +142,19 @@ def test_extract_field_multiple():
     }
     result = scrape_string(spec, input_str)
     assert result["author"] == ["John Smith", "Joe Bloggs"]
+
+
+def test_strip_image_src():
+    clean_result_verifier({
+        "strip_image_src": ['substr1', 'substr2']
+    }, """
+       <div>
+         <img src="substr1">
+         <img src="substr2">
+         <img src="substr3">
+       </div>
+    """, """
+       <div>
+         <img src="substr3">
+       </div>
+    """)

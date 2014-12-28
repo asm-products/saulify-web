@@ -28,7 +28,7 @@ Before each directive, we state its level of support in the `InstapaperScraper`.
 (S) strip
 (U) strip_comments
 (S) strip_id_or_class
-(P) strip_image_src
+(S) strip_image_src
 
 (U) convert_double_br_tags
 

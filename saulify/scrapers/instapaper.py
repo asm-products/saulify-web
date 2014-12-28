@@ -45,6 +45,7 @@ class InstapaperScraper(object):
         body = maybe_body if maybe_body is not None else etree
         body = self._strip_nodes(body)
         body = self._strip_id_or_class(body)
+        body = self._strip_image_src(body)
 
         result["html"] = html.tostring(body)
 
@@ -70,6 +71,19 @@ class InstapaperScraper(object):
         Strips any elements matched by the configured xpaths.
         """
         for xpath in self.spec["strip"]:
+            self._drop_by_xpath(etree, xpath)
+        return etree
+
+    def _strip_image_src(self, etree):
+        """ Implements the `strip_img_src` directive.
+
+        Strips any `img` whose @src contains certain substrings.
+        """
+        print self.spec["strip_image_src"]
+        for substr in self.spec["strip_image_src"]:
+            # The value for this field is sometimes surrounded by quotes
+            substr = substr.strip(" \"'")
+            xpath = '//img[contains(@src,"{0}")]'.format(substr)
             self._drop_by_xpath(etree, xpath)
         return etree
 
