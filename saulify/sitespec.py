@@ -46,7 +46,8 @@ def load_testcases(f):
 
     for label, content in parse_specfile(f):
         if label == "test_url":
-            case = collections.defaultdict(list, (label, content))
+            case = collections.defaultdict(list)
+            case[label] = content
             cases.append(case)
         elif label.startswith("test_"):
             if not cases:
