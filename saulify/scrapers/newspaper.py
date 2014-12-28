@@ -16,12 +16,16 @@ def clean_url(url_to_clean):
 
     Returns:
         Dictionary providing cleaned article and extracted content
-        (see `construct_result`).
+        (see `construct_result`), or `None` if newspaper could not extract
+        the article.
     """
 
     article = Article(url_to_clean)
     article.download()
     article.parse()
+
+    if article.top_node is None:
+        return None
 
     return construct_result(article)
 
@@ -37,11 +41,15 @@ def clean_source(url, source):
 
     Returns:
         Dictionary providing cleaned article and extracted content
-        (see `construct_result`).
+        (see `construct_result`), or `None` if newspaper could not extract
+        the article.
     """
     article = Article(url)
     article.set_html(source)
     article.parse()
+
+    if article.top_node is None:
+        return None
 
     return construct_result(article)
 
