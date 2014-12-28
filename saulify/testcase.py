@@ -3,7 +3,7 @@ __all__ = ["TestCase"]
 import urlparse
 import lxml.html
 
-from saulify.clean import clean_content
+from saulify.scrapers.newspaper import clean_url
 
 
 class TestCase(object):
@@ -27,7 +27,7 @@ class TestCase(object):
 
     def run(self):
         try:
-            output = clean_content(self.url)
+            output = clean_url(self.url)
         except Exception as e:
             return {
                 "url": self.url,

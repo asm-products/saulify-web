@@ -8,7 +8,7 @@ import markdown2
 import html2text
 
 
-def clean_content(url_to_clean):
+def clean_url(url_to_clean):
     """ Parse an article at a given url using newspaper.
 
     Args:

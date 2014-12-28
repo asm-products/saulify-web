@@ -11,7 +11,7 @@ from common import api_key_gen, get_rate_limit
 from forms import AddUserForm
 import json
 
-from saulify.clean import clean_content
+from saulify.scrapers.newspaper import clean_url
 
 
 MEMBER = 100
@@ -193,7 +193,7 @@ def show_article():
     if not url_to_clean:
         return redirect(url_for('index'))
 
-    a = clean_content(url_to_clean)
+    a = clean_url(url_to_clean)
     return render_template('article/show.html',
                            article=a,
                            original=url_to_clean)
@@ -206,7 +206,7 @@ def api():
     if not url_to_clean:
         return redirect(url_for('index'))
 
-    cleaned = clean_content(url_to_clean)
+    cleaned = clean_url(url_to_clean)
     return jsonify(cleaned)
 
 
