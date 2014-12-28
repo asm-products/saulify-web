@@ -2,7 +2,10 @@ import io
 import os
 import urlparse
 
+import markdown2
 import html2text
+
+from flask import Markup
 
 from . import download
 from . import instapaper
@@ -57,7 +60,8 @@ def scraper_cascade(url, content):
 
     # Add markdown (and plaintext)
     result["markdown"] = html2text.HTML2Text().handle(result["html"])
-    # TODO: Investigate the most apropriate method of converting markdown
+    result["markdown_html"] = Markup(markdown2.markdown(result["markdown"]))
+    # TODO: Investigate the most appropriate method of converting markdown
     # to plaintext.
     result["plaintext"] = result["markdown"].replace('\n', ' ')
 
