@@ -1,5 +1,6 @@
 __all__ = ["TestCase"]
 
+import re
 import urlparse
 import lxml.html
 
@@ -35,11 +36,12 @@ class TestCase(object):
                 "message": e.message
             }
         else:
+            norm_space = re.sub(r'\s+', ' ', output["markdown"])
             return {
                 "url": self.url,
                 "status": "OK",
                 "result": {
-                    "fragments": self.check_fragments(output["plaintext"]),
+                    "fragments": self.check_fragments(norm_space),
                     "images": self.check_images(output["html"]),
                 }
             }
