@@ -18,7 +18,8 @@ def clean_url(url):
         url (str): Url of article to be scraped.
 
     Returns:
-        Dictionary detailing the extracted article.
+        Dictionary detailing the extracted article, or `None` if no scrapers
+        could extract the article
     """
 
     content = download.download_url(url)
