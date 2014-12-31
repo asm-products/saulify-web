@@ -7,8 +7,8 @@ before_script:
 
 # Setup environment variables
 env:
-    - TEST_DATABASE_URL=postgresql://postgres@localhost/travis_ci_test
-    - SECRET_KEY=1234567890
+    global:
+        - TEST_DATABASE_URL=postgresql://postgres@localhost/travis_ci_test SECRET_KEY=1234567890
 
 # Install dependencies
 install: "pip install -r requirements.txt"
