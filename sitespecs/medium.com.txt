@@ -1,5 +1,6 @@
 body: //div[contains(@class, 'postContent-inner')]
 strip_id_or_class: supplementalPostContent
+title: //h2[@name="title"]
 
 prune: no
 
