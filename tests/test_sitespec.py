@@ -70,3 +70,13 @@ def test_loading_find_replace():
             ("</script>", "</div>")
         ],
     })
+
+
+def test_loading_boolean_properties():
+    specload_verifier(u"""
+        prune: yes
+        prune: no
+        prune: yes
+    """, {
+        "prune": True,
+    })

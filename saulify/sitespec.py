@@ -70,6 +70,10 @@ def load_rules(f):
         These directives come in pairs; one find regular expression and one
         replace. Stored as a list of 2-tuples under the key `"find_replace"`.
 
+    Boolean properties such as `prune`:
+        Stored as `True` or `False` according to the last line specifying
+        the value.
+
     Args:
       f (file): Spec file object
 
@@ -79,6 +83,8 @@ def load_rules(f):
 
     rules = collections.defaultdict(list)
     find_string = None
+
+    boolean_props = ["prune"]
 
     for label, content in parse_specfile(f):
 
@@ -92,6 +98,14 @@ def load_rules(f):
             if not find_string:
                 raise Exception("Invalid spec file")
             rules["find_replace"].append((find_string, content))
+
+        elif label in boolean_props:
+            if content == "yes":
+                rules[label] = True
+            elif content == "no":
+                rules[label] = False
+            else:
+                raise Exception("Invalid spec file")
 
         else:
             rules[label].append(content)
