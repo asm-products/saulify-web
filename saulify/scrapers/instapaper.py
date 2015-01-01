@@ -1,5 +1,7 @@
 __all__ = ["InstapaperScraper"]
 
+import re
+
 from lxml import html
 from lxml.html.clean import clean_html
 
@@ -46,6 +48,7 @@ class InstapaperScraper(object):
         self._strip_nodes(body)
         self._strip_id_or_class(body)
         self._strip_image_src(body)
+        self._maybe_prune(body)
 
         result["html"] = html.tostring(body)
 
@@ -83,6 +86,48 @@ class InstapaperScraper(object):
             substr = substr.strip(" \"'")
             xpath = '//img[contains(@src,"{0}")]'.format(substr)
             self._drop_by_xpath(etree, xpath)
+
+    def _maybe_prune(self, elem, special_limit=0.5):
+        """ Implements the `prune` directive.
+
+        Strips "elements within body that do not resemble content elements".
+        Uses heuristic based on fraction of alphanumeric characters in tags.
+
+        Args:
+            elem (lxml.Element): The body element to be pruned
+
+            special_limit (float): Elements which include more than this
+                fraction of special characters (ignoring whitespace) are pruned.
+
+        Returns:
+            `None`; mutates `elem`
+        """
+
+        nonspecial = re.compile(r'[\w,\.]', re.UNICODE)
+        whitespace = re.compile(r'\s', re.UNICODE)
+
+        def prune_element(e):
+
+            for child in e.xpath("*"):
+                prune_element(child)
+
+            # If a sub-element was kept, don't try to prune this element.
+            if len(e) > 0:
+                return
+
+            content = e.text_content().strip()
+
+            nsc = len(re.findall(nonspecial, content))
+            wc = len(re.findall(whitespace, content))
+            sc = len(content) - wc - nsc
+
+            if e.tag not in ["br"]:
+                if sc + nsc == 0 or float(sc) / (sc + nsc) > special_limit:
+                    e.drop_tree()
+
+        if self.spec["prune"] is not False:
+            for e in elem.xpath("*"):
+                prune_element(e)
 
     def _strip_id_or_class(self, etree):
         """ Implements the `strip_id_or_class` directive.

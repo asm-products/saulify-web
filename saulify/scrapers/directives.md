@@ -36,7 +36,12 @@ Before each directive, we state its level of support in the `InstapaperScraper`.
 (S) replace_string
 
 (U) tidy
-(U) prune
+
+## (S) prune
+
+No information on the algorithm used to prune non-content nodes by Instapaper / Fivefilters is available.
+Implementation uses a heuristic based on the ratio of special to non-special characters.
+See `saulify.scrapers.instapaper._maybe_prune`.
 
 
 # Navigation

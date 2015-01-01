@@ -29,7 +29,8 @@ def scrape_string(spec_dict, input_str):
 
 def test_strip_elements():
     clean_result_verifier({
-        "strip": ['//div[@class="stripme"]']
+        "strip": ['//div[@class="stripme"]'],
+        "prune": False
     }, """
       <div>
         <div class="stripme" />
@@ -66,7 +67,8 @@ def test_extract_body():
 def test_strip_id_or_class():
     # This behaviour represents a literal reading of the fivefilters docs.
     clean_result_verifier({
-        "strip_id_or_class": ['class1 class2']
+        "strip_id_or_class": ['class1 class2'],
+        "prune": False
     }, """
        <div>
            <div class="class1 class2"></div>
@@ -146,7 +148,8 @@ def test_extract_field_multiple():
 
 def test_strip_image_src():
     clean_result_verifier({
-        "strip_image_src": ['substr1', 'substr2']
+        "strip_image_src": ['substr1', 'substr2'],
+        "prune": False
     }, """
        <div>
          <img src="substr1">
@@ -156,5 +159,20 @@ def test_strip_image_src():
     """, """
        <div>
          <img src="substr3">
+       </div>
+    """)
+
+
+def test_prune():
+    clean_result_verifier({
+        "prune": True
+    }, """
+       <div>
+         <div>Content div</div>
+         <div>____[[(()</div>
+       </div>
+    """, """
+       <div>
+         <div>Content div</div>
        </div>
     """)
