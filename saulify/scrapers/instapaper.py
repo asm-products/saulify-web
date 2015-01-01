@@ -43,9 +43,9 @@ class InstapaperScraper(object):
         # Directives acting on the article body
         maybe_body = self._extract_first(etree, "body")
         body = maybe_body if maybe_body is not None else etree
-        body = self._strip_nodes(body)
-        body = self._strip_id_or_class(body)
-        body = self._strip_image_src(body)
+        self._strip_nodes(body)
+        self._strip_id_or_class(body)
+        self._strip_image_src(body)
 
         result["html"] = html.tostring(body)
 
@@ -72,7 +72,6 @@ class InstapaperScraper(object):
         """
         for xpath in self.spec["strip"]:
             self._drop_by_xpath(etree, xpath)
-        return etree
 
     def _strip_image_src(self, etree):
         """ Implements the `strip_img_src` directive.
@@ -84,7 +83,6 @@ class InstapaperScraper(object):
             substr = substr.strip(" \"'")
             xpath = '//img[contains(@src,"{0}")]'.format(substr)
             self._drop_by_xpath(etree, xpath)
-        return etree
 
     def _strip_id_or_class(self, etree):
         """ Implements the `strip_id_or_class` directive.
@@ -103,7 +101,6 @@ class InstapaperScraper(object):
             xpath = '//*[contains(@class,"{0}")] | //*[contains(@id,"{0}")]' \
                     .format(id_or_class)
             self._drop_by_xpath(etree, xpath)
-        return etree
 
     def _drop_by_xpath(self, etree, xpath):
         """ Drop all elements matching `xpath` from `etree` """
