@@ -121,7 +121,7 @@ class InstapaperScraper(object):
                 for which nodes will be extracted.
 
         Returns:
-            A list of lists of the matching nodes for each xpath.
+            A flat list of the matching nodes for every configured xpath.
         """
         for xpath in self.spec[component]:
             for node in etree.xpath(xpath):
