@@ -79,7 +79,6 @@ class InstapaperScraper(object):
 
         Strips any `img` whose @src contains certain substrings.
         """
-        print self.spec["strip_image_src"]
         for substr in self.spec["strip_image_src"]:
             # The value for this field is sometimes surrounded by quotes
             substr = substr.strip(" \"'")
