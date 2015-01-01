@@ -34,29 +34,31 @@ def clean_url(url):
 def scraper_cascade(url, content):
     """ Extract article using a fallback sequence of scrapers.
 
+    If no scrapers are able to extract the article body, the original page
+    will be converted to markdown.
+
     Args:
         url (str): Url of article being scraped.
 
         content (str): Html source of the article page.
 
     Returns:
-        Dictionary detailing the extracted article, or `None` if no scrapers
-        could extract the article
+        Dictionary detailing the extracted article.
     """
 
     hostname = urlparse.urlparse(url).hostname
     spec = load_superdomains(hostname)
 
+    # Pre-populate fields such as author and title using newspaper,
+    # and return complete html page by default if newspaper does not work.
+    result = newspaper.clean_source(url, content) or {"html": content}
+
     if spec is not None:
         # Instapaper scraper
         scraper = instapaper.InstapaperScraper(spec)
-        result = scraper.clean_article(content)
-    else:
-        # Fallback: newspaper
-        result = newspaper.clean_source(url, content)
-
-    if result is None:
-        return None
+        for k, v in scraper.clean_article(content).items():
+            if v:
+                result[k] = v
 
     # Add markdown (and plaintext)
     result["markdown"] = html2text.HTML2Text().handle(result["html"])
