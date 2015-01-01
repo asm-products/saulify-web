@@ -37,10 +37,16 @@ class InstapaperScraper(object):
         etree = html.fromstring(source)
 
         # Directives extracting content from the DOM
-        for c in ["author", "date", "title", "footnotes"]:
-            result[c] = []
-            for node in self._extract_all(etree, c):
-                result[c].append(node.text.strip())
+
+        for c in ["date", "title", "footnotes"]:
+            n = self._extract_first(etree, c)
+            if n is not None:
+                result[c] = n.text_content().strip()
+
+        authors = []
+        for node in self._extract_all(etree, "author"):
+            authors.append(node.text_content().strip())
+        result["authors"] = ", ".join(authors)
 
         # Directives acting on the article body
         maybe_body = self._extract_first(etree, "body")

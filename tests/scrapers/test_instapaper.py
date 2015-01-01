@@ -98,7 +98,7 @@ def test_find_replace():
     """)
 
 
-def test_extract_field():
+def test_extract_author():
     input_str = """
     <div>
         <div class="author">
@@ -110,7 +110,25 @@ def test_extract_field():
         "author": ['//div[@class="author"]']
     }
     result = scrape_string(spec, input_str)
-    assert result["author"] == ["John Smith"]
+    assert result["authors"] == "John Smith"
+
+
+def test_extract_field_first():
+    input_str = """
+    <div>
+        <div class="date">
+            01/01/2015
+        </div>
+        <div class="date">
+            02/01/2015
+        </div>
+    </div>
+    """
+    spec = {
+        "date": ['//div[@class="date"]']
+    }
+    result = scrape_string(spec, input_str)
+    assert result["date"] == "01/01/2015"
 
 
 def test_extract_field_fallback():
@@ -125,7 +143,7 @@ def test_extract_field_fallback():
         "author": ['//div[@id="fails"]', '//div[@class="author"]']
     }
     result = scrape_string(spec, input_str)
-    assert result["author"] == ["John Smith"]
+    assert result["authors"] == "John Smith"
 
 
 def test_extract_field_multiple():
@@ -143,7 +161,7 @@ def test_extract_field_multiple():
         "author": ['//div[@id="fails"]', '//div[@class="author"]']
     }
     result = scrape_string(spec, input_str)
-    assert result["author"] == ["John Smith", "Joe Bloggs"]
+    assert result["authors"] == "John Smith, Joe Bloggs"
 
 
 def test_strip_image_src():
