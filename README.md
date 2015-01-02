@@ -1,5 +1,6 @@
 ## Saulify for Web
 
+[![Build Status](https://travis-ci.org/asm-products/saulify-web.svg?branch=master)](https://travis-ci.org/asm-products/saulify-web) 
 <a href="https://assembly.com/saulify/bounties"><img src="https://asm-badger.herokuapp.com/saulify/badges/tasks.svg" height="24px" alt="Open Tasks" /></a>
 
 Got a hard-to-read website? [Better call Saul](http://saulify.me) to clean it up!
@@ -27,10 +28,14 @@ More info here for [getting started w/ Python on Heroku](https://devcenter.herok
 
 #### Testing
 
-Saulify uses the [pytest](http://pytest.org) framework for making sure we keep clear of new bugs and regressions and these tests can be found in the `/tests` directory. You can run the test suite via the command line using:
+Saulify uses the [pytest](http://pytest.org) framework for making sure we keep clear of new bugs and regressions and these tests can be found in the `/tests` directory. 
+
+You'll need to set an `.env` variable for the `TEST_DATABASE_URL` to be a local or remote database that you want to use specifically for testing.
+
+Then you can run the test suite via the command line using:
 
 ```shell
-$ py.test
+$ foreman run py.test
 ```
 
 Also, we have a secondary test script for verifying the accuracy of the article scraper recipes. You can run that script via the command line using:
