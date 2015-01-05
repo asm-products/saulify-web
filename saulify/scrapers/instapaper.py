@@ -145,6 +145,10 @@ class InstapaperScraper(object):
 
         Fixes are possible but may break compatibility with some existing site
         configuration files.
+
+        TODO : assess the extent to which existing configuration files would
+        need to be adjusted if the semantics of this directive were changed to
+        use set-wise logic on class selectors (hopefully this would be minimal)
         """
         for id_or_class in self.spec["strip_id_or_class"]:
             # The value for this field is sometimes surrounded by quotes
