@@ -79,10 +79,14 @@ def load_superdomains(hostname):
 
     Args:
         hostname (str): Hostname for which to find an applicable spec file.
+            The validity of the string as a hostname is not verified.
 
     Returns:
         The result of the first call to `load_sitespec` that succeeds,
         or `None` if no spec files were available for the given host.
+
+        If `hostname` is invalid, the function will attempt to find a spec file
+        matching it anyway, and return `None` if it fails.
     """
 
     try:
