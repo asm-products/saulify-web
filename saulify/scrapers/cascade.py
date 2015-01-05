@@ -85,21 +85,21 @@ def load_superdomains(hostname):
         or `None` if no spec files were available for the given host.
     """
 
-    def recurse():
+    try:
+        d = load_sitespec(hostname)
+    except IOError:
+        d = {}
+
+    # If `d` is empty, file for `hostname` could not be loaded or was empty;
+    # in either case, we go on to the next superdomain.
+    if not d:
         super_domain = hostname.partition(".")[2]
         if super_domain:
             return load_superdomains(super_domain)
         else:
             return None
 
-    try:
-        d = load_sitespec(hostname)
-        if d:
-            return d
-        else:
-            return recurse()
-    except IOError:
-        return recurse()
+    return d
 
 
 def load_sitespec(hostname):
