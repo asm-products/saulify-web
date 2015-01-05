@@ -17,6 +17,13 @@ def parse_specfile(f):
       List of (label, content) tuples representing directives
     """
 
+    # This regex parses individual lines in the spec file.
+    #
+    # These consist of a label and content, which are arbitrary text strings
+    # separated by the ':' character and optionally end with a python-style
+    # comment, as illustrated below:
+    #
+    # strip_id_or_class: decoration # Remove decorations
     r = re.compile("(?P<label>[^#:]+):(?P<content>[^#]+)")
 
     for t in f.read().splitlines():
