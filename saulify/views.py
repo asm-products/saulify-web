@@ -200,7 +200,7 @@ def show_article():
 
 
 @app.route("/markdown")
-def show_markdown_article():
+def show_article_markdown():
     url_to_clean = request.args.get('u')
     if not url_to_clean:
         return redirect(url_for('index'))

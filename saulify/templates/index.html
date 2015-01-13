@@ -20,6 +20,8 @@
                     <input type="url" name="u" class="form-control u-input" placeholder="Paste the URL of an article to clean up and share!">
                     <button class="btn btn-default btn-saul">Clean It <i class="fa fa-chevron-right"></i>
                     </button>
+                    <button class="btn btn-default btn-saul" formaction="{{ url_for('show_article_markdown') }}">Markdown<i class="fa fa-chevron-right"></i>
+                    </button>
                 </form>
             </div>
         </div>
