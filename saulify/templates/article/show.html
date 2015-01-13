@@ -13,5 +13,51 @@
         </div>
       </div>
     </div>
+    <div class="row md-hidden" id="markdown">
+      <div class="col-md-8 col-md-offset-2">
+        <h4>MarkDown <a class="btn btn-default btn-sm" id="select">select all.</a></h4>
+        <pre><code class="language-markdown" id="mdtext">{{ article.markdown }}</code></pre>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        <div class="original">
+            <a href="#markdown" class="btn btn-default" id="showMD">show markdown</a>
+        </div>
+      </div>
+    </div>
   </div>
+{% endblock %}
+{% block footer %}
+    <script src="/static/js/prism.js"></script>
+    <script>
+    $("#showMD").click(function(e){
+        var md = $("#markdown");
+        e.preventDefault();
+        md.toggleClass("md-hidden");
+        if(md.hasClass("md-hidden")){
+            $("#showMD").text("show markdown");
+        }else{
+            $("#showMD").text("hide markdown");
+        }
+    });
+
+    $("#select").click(selectMarkDown)
+
+    function selectMarkDown() {
+        var containerid = "mdtext";
+        if (document.selection) {
+            var range = document.body.createTextRange();
+            range.moveToElementText(document.getElementById(containerid));
+            range.select();
+        } else if (window.getSelection) {
+            var range = document.createRange();
+            range.selectNode(document.getElementById(containerid));
+            window.getSelection().addRange(range);
+        }
+    }
+    </script>
+{% endblock %}
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/prism.css') }}">
 {% endblock %}
