@@ -24,8 +24,9 @@ def clean_url(url):
         Dictionary detailing the extracted article.
     """
 
-    content = download.download_url(url)
-    result = scraper_cascade(url, content)
+    content, content_type = download.download_url(url)
+    content_is_xml = "xml" in content_type # Don't support XML
+    result = "" if content_is_xml else scraper_cascade(url, content)
 
     return result
 

@@ -54,6 +54,8 @@ Also, we have a secondary test script for verifying the accuracy of the article 
 $ python runreport.py -p
 ```
 
+You can also use the `-vp` flag to have verbose output with URLs and detailed failure messages shown for each test.
+
 #### Contributing
 
 This is a product being built by the Assembly community. If you'd like to contribute to Saulify, we'd love to have the help! 

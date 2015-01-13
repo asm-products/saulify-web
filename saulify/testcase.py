@@ -27,6 +27,13 @@ class TestCase(object):
         self._spec = spec
 
     def run(self):
+        if "test_contains" not in self._spec:
+            return {
+                    "url": self.url,
+                    "status": "WARNING",
+                    "message": "NO TEST CASES SPECIFIED"
+                }
+
         try:
             output = clean_url(self.url)
         except Exception as e:
@@ -36,15 +43,22 @@ class TestCase(object):
                 "message": e.message
             }
         else:
-            norm_space = re.sub(r'\s+', ' ', output["markdown"])
-            return {
-                "url": self.url,
-                "status": "OK",
-                "result": {
-                    "fragments": self.check_fragments(norm_space),
-                    "images": self.check_images(output["html"]),
+            if not output:
+                return {
+                  "url": self.url,
+                  "status": "EXCEPTION",
+                  "message": "Output was empty; Could be because the result was not HTML."
                 }
-            }
+            else:
+                norm_space = re.sub(r'\s+', ' ', output["markdown"])
+                return {
+                    "url": self.url,
+                    "status": "OK",
+                    "result": {
+                        "fragments": self.check_fragments(norm_space),
+                        "images": self.check_images(output["html"]),
+                    }
+                }
 
     def check_fragments(self, text):
         result = {"missing": [], "found": []}
