@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block body %}
+  <div class="container article-page">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        <h2><a href="{{ original }}">{{ article.title }}</a></h2>
+        <h4>{{ article.authors }}</h4>
+        <div class="article">
+          <p><a class="btn btn-default btn-sm" id="select">select all</a></p>
+          <pre><code class=language-markdown" id="mdtext">{{ article.markdown }}</code></pre>
+        </div>
+        <div class="original">
+          <a href="{{ original }}">VIEW ORIGINAL</a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+{% block footer %}
+    <script src="/static/js/prism.js"></script>
+    <script>
+    $("#select").click(selectMarkDown)
+
+    function selectMarkDown() {
+        var containerid = "mdtext";
+        if (document.selection) {
+            var range = document.body.createTextRange();
+            range.moveToElementText(document.getElementById(containerid));
+            range.select();
+        } else if (window.getSelection) {
+            var range = document.createRange();
+            range.selectNode(document.getElementById(containerid));
+            window.getSelection().addRange(range);
+        }
+    }
+    </script>
+{% endblock %}
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/prism.css') }}">
+{% endblock %}
