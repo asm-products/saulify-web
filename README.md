@@ -22,9 +22,19 @@ To install it locally:
 - Set up a `.env` file in the root Saulify directory with the environment variables taken from the Heroku config: https://devcenter.heroku.com/articles/config-vars (Ask a team member to send you the file if you don't have access)
 - Type `foreman run python runserver.py` (for development) or `foreman start` (for production) at the command line to start the local server.
 
-Note: Saulify uses the [Newspaper](https://github.com/codelucas/newspaper) library for scraping website articles. If you have trouble installing it on Mac OS X Yosemite during the `pip install` process above, please see this [Github issue](https://github.com/codelucas/newspaper/issues/79) for helpful info.
+Note: Saulify uses the [Newspaper](https://github.com/codelucas/newspaper) library as a backup for scraping website articles that we don't have scraping recipes for. If you have trouble installing it on Mac OS X Yosemite during the `pip install` process above, please see this [Github issue](https://github.com/codelucas/newspaper/issues/79) for helpful info.
 
 More info here for [getting started w/ Python on Heroku](https://devcenter.heroku.com/articles/getting-started-with-python-o).
+
+#### Scraping
+
+Saulify uses Instapaper style recipes for scraping each article based on the domain of the article. 
+
+These recipes are open source and can be found here: [https://github.com/fivefilters/ftr-site-config](https://github.com/fivefilters/ftr-site-config) and within the `/sitespecs` directory of the repo. (See below for a means to test these sitespecs.)
+
+If you'd like to generate a new domain recipe, you can use the [point-and-click tool the FiveFilters team has provided](http://siteconfig.fivefilters.org) for getting the xpaths of each page section you'd like to scrape or exclude. More help on the format can be found [here](http://help.fivefilters.org/customer/portal/articles/223153-site-patterns).
+
+If we cannot find a proper recipe for a domain, we use the [Newspaper](https://github.com/codelucas/newspaper) library as a backup which uses heuristics instead of recipes.
 
 #### Testing
 

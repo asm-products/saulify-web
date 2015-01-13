@@ -1,3 +1,9 @@
-test_url: http://www.psychologytoday.com/articles/200910/what-makes-marriage-work
-test_contains: Denying Responsibility. No matter what your partner charges, you insist in no uncertain terms that you are not to blame.
-test_contains: In addition, listening or speaking without being defensive helps to counter several destructive habits
+title: //div[@class="page-title"]/h1
+author: //a[@title="View Bio"]
+date: substring-before(substring-after(//span[@class="submitted"], 'Published on '), ' by')
+strip://div[@class="page-title"]/h1
+strip://div[@class="article-abstract"]
+strip://div[@class="article-meta"]
+strip://div[@id="rightColumn"]
+strip://div[@id="inline-content-bottom-left"]
+test_url: http://www.psychologytoday.com/blog/how-happiness/201205/my-quibble-facebook
