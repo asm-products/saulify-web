@@ -7,7 +7,7 @@ from flask.ext.principal import Permission, RoleNeed, Identity, \
 from saulify import app, login_manager, db
 from models import User
 from functools import wraps
-from common import api_key_gen, get_rate_limit
+from common import api_key_gen
 from forms import AddUserForm
 import json
 
@@ -213,17 +213,3 @@ def api():
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
-
-
-@app.after_request
-def inject_x_rate_headers(response):
-    '''
-    Add headers before responding to user
-    .'''
-    limit = get_rate_limit()
-    if limit and limit.send_x_headers:
-        h = response.headers
-        h.add('X-RateLimit-Remaining', str(limit.remaining))
-        h.add('X-RateLimit-Limit', str(limit.limit))
-        h.add('X-RateLimit-Reset', str(limit.reset))
-    return response
