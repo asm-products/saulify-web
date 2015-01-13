@@ -1,21 +1,17 @@
-from flask import request, render_template, redirect, url_for, Markup, \
+from flask import request, render_template, redirect, url_for, \
     abort, jsonify, g, flash, current_app, session
-from newspaper import Article
 from flask.ext.login import login_user, logout_user, current_user, \
     login_required
 from flask.ext.principal import Permission, RoleNeed, Identity, \
     AnonymousIdentity, identity_changed, UserNeed, identity_loaded
 from saulify import app, login_manager, db
 from models import User
-from xml.etree import ElementTree
-import html2text
-import markdown2
 from functools import wraps
-from common import api_key_gen, get_rate_limit
+from common import api_key_gen
 from forms import AddUserForm
 import json
 
-from saulify.clean import clean_content
+from saulify.scrapers.cascade import clean_url
 
 
 MEMBER = 100
@@ -197,7 +193,7 @@ def show_article():
     if not url_to_clean:
         return redirect(url_for('index'))
 
-    a = clean_content(url_to_clean)
+    a = clean_url(url_to_clean)
     return render_template('article/show.html',
                            article=a,
                            original=url_to_clean)
@@ -210,24 +206,10 @@ def api():
     if not url_to_clean:
         return redirect(url_for('index'))
 
-    cleaned = clean_content(url_to_clean)
+    cleaned = clean_url(url_to_clean)
     return jsonify(cleaned)
 
 
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
-
-
-@app.after_request
-def inject_x_rate_headers(response):
-    '''
-    Add headers before responding to user
-    .'''
-    limit = get_rate_limit()
-    if limit and limit.send_x_headers:
-        h = response.headers
-        h.add('X-RateLimit-Remaining', str(limit.remaining))
-        h.add('X-RateLimit-Limit', str(limit.limit))
-        h.add('X-RateLimit-Reset', str(limit.reset))
-    return response
