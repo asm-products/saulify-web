@@ -1,9 +1,11 @@
+import io
 import os
 import json
 import argparse
 import colorama
 
-import saulify.sitespec as sitespec
+from saulify import sitespec
+from saulify.testcase import TestCase
 
 SPEC_DIRECTORY = "sitespecs"
 
@@ -64,11 +66,13 @@ def print_report(report):
 if __name__ == "__main__":
     for fname in os.listdir(SPEC_DIRECTORY):
         fpath = os.path.join(SPEC_DIRECTORY, fname)
-        test_cases = sitespec.load_testcases(fpath)
-        for test_case in test_cases:
-            report = test_case.run()
-            if args.pretty:
-                print_report(report)
-                print("\n")
-            else:
-                print(json.dumps(report))
+        with io.open(fpath, encoding="utf-8") as f:
+            test_specs = sitespec.load_testcases(f)
+            for test_spec in test_specs:
+                test_case = TestCase(test_spec)
+                report = test_case.run()
+                if args.pretty:
+                    print_report(report)
+                    print("\n")
+                else:
+                    print(json.dumps(report))
