@@ -60,3 +60,6 @@ def test_revoke_api_key(client):
     client.delete('/user/key')
     print 'after delete:{}'.format(current_user.api_key)
     assert current_user.api_key is None
+
+def test_show_markdown(client):
+    client.get(url_for('show_article_markdown'), u=)
