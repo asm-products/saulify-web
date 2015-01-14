@@ -70,7 +70,7 @@ def scraper_cascade(url, content, include_html=True):
 
 
 def markdown_to_html(markdown):
-    Markup(markdown2.markdown(markdown))
+    return Markup(markdown2.markdown(markdown))
 
 
 def load_superdomains(hostname):

@@ -5,13 +5,13 @@ from flask.ext.login import login_user, logout_user, current_user, \
 from flask.ext.principal import Permission, RoleNeed, Identity, \
     AnonymousIdentity, identity_changed, UserNeed, identity_loaded
 from saulify import app, login_manager, db
-from models import User
+from models import User, Article
 from functools import wraps
 from common import api_key_gen
 from forms import AddUserForm
 import json
 
-from saulify.scrapers.cascade import clean_url
+from saulify.scrapers.cascade import clean_url, markdown_to_html
 
 
 MEMBER = 100
@@ -187,16 +187,49 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/clean')
-def show_article():
-    url_to_clean = request.args.get('u')
-    if not url_to_clean:
-        return redirect(url_for('index'))
-
+def show_full_url(url_to_shorten):
     a = clean_url(url_to_clean)
     return render_template('article/show.html',
                            article=a,
                            original=url_to_clean)
+
+
+@app.route('/clean')
+def show_article():
+    url_to_clean = request.args.get('u')
+    should_shorten = request.args.get('short')
+
+
+    if not url_to_clean:
+        return redirect(url_for('index'))
+
+    if should_shorten in ['0', 'no', 'false']:
+        return show_full_url(url_to_clean)
+
+    result = clean_url(url_to_clean, include_html=False)
+    # In the cases where I'm using result.get, I don't care if it returns None.
+    # In other cases, I don't want to silently fail.
+    article = Article(url_to_clean, result['title'], result.get('authors'), result['markdown'])
+    article.put()
+    slug = article.get_slug()
+    return redirect(url_for('show_article_shortened', slug=slug))
+
+
+@app.route("/r/<slug>")
+def show_article_shortened(slug):
+    article = Article.get_by_slug(slug)
+
+    if not article:
+        abort(404)
+
+    html = markdown_to_html(article.markdown)
+
+    article_dict ={
+        'title': article.title,
+        'authors': article.authors,
+        'markdown_html': html
+    }
+    return render_template('article/show.html', article=article_dict, original=article.url)
 
 
 @app.route("/markdown")

@@ -18,3 +18,4 @@ app.redis = Redis(host=app.config.get('REDIS_HOST', None),
                   password=app.config.get('REDIS_PASS', None))
 
 from saulify import views, models
+db.create_all()

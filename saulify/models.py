@@ -42,13 +42,13 @@ class Article(db.Model):
     updated = db.Column(db.DateTime())
     url = db.Column(db.String(300))
     title = db.Column(db.String(300))
-    author = db.Column(db.String(120))
+    authors = db.Column(db.String(120))
     markdown = db.Column(db.Text())
 
-    def __init__(self, url, title, author, markdown):
+    def __init__(self, url, title, authors, markdown):
         self.url = url
         self.title = title
-        self.author = author
+        self.authors = authors
         self.markdown = markdown
 
     def put(self):
