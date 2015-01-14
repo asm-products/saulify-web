@@ -25,8 +25,8 @@ def clean_url(url):
     """
 
     content, content_type = download.download_url(url)
-    content_is_xml = "xml" in content_type # Don't support XML
-    result = "" if content_is_xml else scraper_cascade(url, content)
+    content_is_html = "html" in content_type # Don't support XML, JSON, etc.
+    result = scraper_cascade(url, content) if content_is_html else ""
 
     return result
 

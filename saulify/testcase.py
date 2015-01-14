@@ -3,9 +3,11 @@ __all__ = ["TestCase"]
 import re
 import urlparse
 import lxml.html
+import colorama
 
 from saulify.scrapers.cascade import clean_url
 
+colorama.init()
 
 class TestCase(object):
     """
@@ -27,13 +29,6 @@ class TestCase(object):
         self._spec = spec
 
     def run(self):
-        if "test_contains" not in self._spec:
-            return {
-                    "url": self.url,
-                    "status": "WARNING",
-                    "message": "NO TEST CASES SPECIFIED"
-                }
-
         try:
             output = clean_url(self.url)
         except Exception as e:
@@ -51,14 +46,21 @@ class TestCase(object):
                 }
             else:
                 norm_space = re.sub(r'\s+', ' ', output["markdown"])
-                return {
-                    "url": self.url,
-                    "status": "OK",
-                    "result": {
-                        "fragments": self.check_fragments(norm_space),
-                        "images": self.check_images(output["html"]),
+                if "test_contains" not in self._spec:
+                    return {
+                            "url": self.url,
+                            "status": "WARNING",
+                            "message": "NO TEST CASES SPECIFIED: try testing for a string or image in the page contents"
+                        }
+                else:
+                    return {
+                        "url": self.url,
+                        "status": "OK",
+                        "result": {
+                            "fragments": self.check_fragments(norm_space),
+                            "images": self.check_images(output["html"]),
+                        }
                     }
-                }
 
     def check_fragments(self, text):
         result = {"missing": [], "found": []}
@@ -81,3 +83,23 @@ class TestCase(object):
             else:
                 result["missing"].append(url)
         return result
+
+    def output_markdown(self):
+        """ 
+        Outputs Markdown for a test_url so we can easily define a test_contains for it.
+        """
+        try:
+            result = clean_url(self.url)
+            if result:
+                markdown = result["markdown"].encode('utf-8')
+        except Exception as e:
+            print("Exception on URL {0}: {1}".format(self.url, e.message))
+        else:
+            if not result:
+                output = "BAD SPEC FILE ({0}): Response was empty or was not HTML".format(self.url)
+            else:
+                output = 'Markdown for URL: {0}\n\n'.format(self.url) + markdown 
+            print(colorama.Fore.GREEN + 'TEST_CASE_BEGINNING:\n------------------------------\n' +
+                  colorama.Fore.RESET + output +
+                  colorama.Fore.RED + '\nTEST_CASE_END\n------------------------------\n\n')
+

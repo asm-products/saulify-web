@@ -194,9 +194,12 @@ def show_article():
         return redirect(url_for('index'))
 
     a = clean_url(url_to_clean)
-    return render_template('article/show.html',
-                           article=a,
-                           original=url_to_clean)
+    if not a:
+        return render_template('error_no_article.html'), 404
+    else: 
+        return render_template('article/show.html',
+                               article=a,
+                               original=url_to_clean)
 
 
 @app.route('/api')

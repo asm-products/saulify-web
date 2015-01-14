@@ -51,10 +51,10 @@ $ foreman run py.test
 Also, we have a secondary test script for verifying the accuracy of the article scraper recipes. You can run that script via the command line using:
 
 ```shell
-$ python runreport.py -p
+$ python runreport.py
 ```
 
-You can also use the `-vp` flag to have verbose output with URLs and detailed failure messages shown for each test.
+You can also use the `-v` flag to have verbose output with URLs and detailed failure messages shown for each test.
 
 #### Contributing
 

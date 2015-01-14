@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="container error-page text-center">
+  <a href="{{ url_for('index') }}">
+    <img src="{{ url_for('static', filename='img/logo.png') }}" width='150' height='150' alt="Saulify"/>
+  </a>
+  <h1>Could not find an article at that URL.</h1>
+
+  <p>Head back to <a href="{{ url_for('index') }}">Saulify</a> and try a different URL.</p>
+
+</div>
+{% endblock %}

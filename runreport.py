@@ -16,9 +16,9 @@ logger_red = colorama.Fore.RED
 logger_yellow = colorama.Fore.YELLOW
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-p", "--pretty", help="Pretty print test results",
+parser.add_argument("-v", "--verbose", help="Verbose test results",
                     action="store_true")
-parser.add_argument("-v", "--verbose", help="Verbose print test results",
+parser.add_argument("-m", "--markdown", help="Print out Markdown for each test URL",
                     action="store_true")
 args = parser.parse_args()
 
@@ -132,11 +132,12 @@ if __name__ == "__main__":
             test_specs = sitespec.load_testcases(f)
             for test_spec in test_specs:
                 test_case = TestCase(test_spec)
-                report = test_case.run()
-                if args.pretty:
-                    generate_report(report)
+                if args.markdown:
+                    print(colorama.Fore.RESET + "Sitespec filename: {0}".format(fname))
+                    markdown = test_case.output_markdown()
                 else:
-                    print(json.dumps(report))
+                    report = test_case.run()
+                    generate_report(report)
     print(colorama.Fore.RESET + '\n\n-----------------------------\n')
-    if args.pretty:
+    if not args.markdown:
         print_test_summary()
