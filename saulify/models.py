@@ -1,6 +1,6 @@
 from saulify import db
 from passlib.apps import custom_app_context as pwd_context
-
+from saulify.common import get_int_from_slug, get_slug_from_int
 
 class User(db.Model):
     __tablename__ = 'user'
@@ -33,3 +33,31 @@ class User(db.Model):
 
     def __repr__(self):
         return '<Name %r>' % self.username
+
+
+class Article(db.Model):
+    __tablename__ = 'article'
+    id = db.Column(db.Integer, primary_key=True)
+    updated = db.Column(db.DateTime)
+    url = db.Column(db.String(300))
+    title = db.Column(db.String(300))
+    author = db.Column(db.String(120))
+    markdown = db.Column(db.Text())
+
+    @property
+    def slug(self):
+        return get_slug_from_int(self.id)
+
+    @classmethod
+    def get_by_slug(cls, slug):
+        """Gets an article by slug, returns None if no such article exsits."""
+        id = get_int_from_slug(slug)
+        return cls.query.get(id)
+
+    @classmethod
+    def get_by_url(cls, url):
+        """Gets the article by its url,
+           returns None if no such article exists in the db.
+        """
+        return cls.query.filter_by(url=url)
+
