@@ -8,4 +8,6 @@ prune:no
 tidy:yes
 
 test_url: http://themerryone.blogspot.com/2010/08/new-move-new-blog.html
+test_contains: laziest golden retriever's struggle with her slow metabolism
 test_url: http://strobist.blogspot.com/2012/01/qa-down-phase-one-rabbit-hole.html
+test_contains: making a jump like this is not an easy decision

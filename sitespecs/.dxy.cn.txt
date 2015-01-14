@@ -2,3 +2,5 @@ body: //div[@id='content']
 prune: no
 
 test_url: http://neurosurg.dxy.cn/article/87224
+test_contains: 上图为一个患颞叶癫痫男孩的头颅
+test_contains_image: http://img.dxycdn.com/cms/upload/userfiles/image/2014/09/29/B1411649460_small.jpg

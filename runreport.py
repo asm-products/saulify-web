@@ -127,17 +127,18 @@ if __name__ == "__main__":
           'Running {0} sitespec tests...\n'.format(spec_count) +
           '-----------------------------\n')
     for fname in os.listdir(SPEC_DIRECTORY):
-        fpath = os.path.join(SPEC_DIRECTORY, fname)
-        with io.open(fpath, encoding="utf-8") as f:
-            test_specs = sitespec.load_testcases(f)
-            for test_spec in test_specs:
-                test_case = TestCase(test_spec)
-                if args.markdown:
-                    print(colorama.Fore.RESET + "Sitespec filename: {0}".format(fname))
-                    markdown = test_case.output_markdown()
-                else:
-                    report = test_case.run()
-                    generate_report(report)
+        if fname.endswith('.txt'):
+            fpath = os.path.join(SPEC_DIRECTORY, fname)
+            with io.open(fpath, encoding="utf-8") as f:
+                test_specs = sitespec.load_testcases(f)
+                for test_spec in test_specs:
+                    test_case = TestCase(test_spec)
+                    if args.markdown:
+                        print(colorama.Fore.RESET + "Sitespec filename: {0}".format(fname))
+                        markdown = test_case.output_markdown()
+                    else:
+                        report = test_case.run()
+                        generate_report(report)
     print(colorama.Fore.RESET + '\n\n-----------------------------\n')
     if not args.markdown:
         print_test_summary()

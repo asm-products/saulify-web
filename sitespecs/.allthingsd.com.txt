@@ -4,3 +4,4 @@ strip_id_or_class: atd-disqus-disclaimer
 tidy: no
 
 test_url: http://mediamemo.allthingsd.com/20110516/bit-ly-gets-a-new-boss/
+test_contains: Bitly has raised $14 million in a few years

@@ -1,5 +1,5 @@
 title: //meta[@property="og:title"]/@content
-body: //div[contains(@class, 'postBody')]
+body: //div[contains(concat(' ',normalize-space(@class),' '),' article-main-body ')]
 date: //div[@id='nameAndTime']/time
 author: //div[@id='nameAndTime']/span[@class='author']
 
@@ -14,3 +14,5 @@ tidy: no
 replace_string(Download today's podcast</a>): Download today's podcast</a></div></body></html>
 
 test_url: http://www.cnet.com/8301-13952_1-57367607-81/the-404-981-where-the-world-is-a-vampire-podcast/
+test_contains: As the case for Web censorship moves forward
+test_contains_image: http://cnet2.cbsistatic.com/hub/i/2012/01/27/f204201c-f0ee-11e2-8c7c-d4ae52e62bcc/79e7ebe6d3eafeff6d08678d4bc97b68/imagesnewspaper-fail.jpg

@@ -12,3 +12,4 @@ strip_id_or_class: post-title
 title: //h1[@class='post-title']
 
 test_url: http://tvrecaps.ew.com/recap/fringe-season-4-episode-2/
+test_contains: fathers got together in 1776

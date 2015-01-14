@@ -11,7 +11,7 @@ html2text==2014.9.25
 itsdangerous==0.24
 lxml==3.4.0
 markdown2==2.3.0
-newspaper==0.0.8
+newspaper==0.0.9.1
 nltk==3.0.0
 requests==2.4.3
 stevedore==1.0.0

@@ -9,3 +9,4 @@ tidy: no
 prune: no
 
 test_url: http://sport.fok.nl/nieuws/548725/1/1/50/rosicky-traint-weer-mee-bij-tsjechie.html
+test_contains: Tomáš Rosický heeft

@@ -6,3 +6,4 @@ strip_id_or_class: byline
 strip: //div[@id='mod-article-byline']
 
 test_url: http://www.chicagotribune.com/classified/automotive/used/chi-auto-refinance-pros-cons-20130513,0,4116070.story
+test_contains: Refinancing involves transferring your car's title

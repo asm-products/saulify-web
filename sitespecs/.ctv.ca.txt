@@ -6,3 +6,4 @@ strip: //p[em[contains(., 'This story has been updated from its original version
 strip: //hr
 
 test_url: http://montreal.ctv.ca/servlet/an/local/CTVNews/20110914/mtl_construction_110914/20110915?hub=MontrealHome
+test_contains: the government's anti-corruption squad

@@ -72,6 +72,14 @@ class TestCase(object):
         return result
 
     def check_images(self, html):
+        # Remove encoding tag because lxml won't accept it for unicode objects
+        if isinstance(html, bytes):
+            if html.startswith(b'<?'):
+               html = re.sub(b'^\<\?.*?\?\>', b'', html, flags=re.DOTALL)
+        else:
+            if html.startswith('<?'):
+                html = re.sub(r'^\<\?.*?\?\>', '', html, flags=re.DOTALL)
+                
         etree = lxml.html.fromstring(html)
         img_rel_urls = etree.xpath("//img/@src")
         img_abs_urls = [urlparse.urljoin(self.url, u) for u in img_rel_urls]

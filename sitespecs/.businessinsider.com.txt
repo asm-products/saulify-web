@@ -7,3 +7,5 @@ date://div[@class="byline"]/span[@class="date"]
 prune: no
 
 test_url: http://www.businessinsider.com/as-europe-booms-on-bailout-deal-john-boehner-just-confirmed-that-the-us-is-nowhere-2011-7
+test_contains: Stocks exploded this morning thanks to the European leaders
+test_contains_image: http://static5.businessinsider.com/image/4e2848fe49e2aef474090000-591-354/chart.jpg
