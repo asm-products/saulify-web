@@ -62,11 +62,15 @@ def scraper_cascade(url, content, include_html=True):
     # Add markdown (and plaintext)
     h = html2text.HTML2Text()
     h.unicode_snob = True
-    result["markdown"] = h.handle(result["html"])
+    result['markdown'] = h.handle(result["html"])
     if include_html:
-        result["markdown_html"] = Markup(markdown2.markdown(result["markdown"]))@
+        result['markdown_html'] = markdown_to_html(result['markdown'])
 
     return result
+
+
+def markdown_to_html(markdown):
+    Markup(markdown2.markdown(markdown))
 
 
 def load_superdomains(hostname):
