@@ -187,11 +187,12 @@ def index():
     return render_template('index.html')
 
 
-def show_full_url(url_to_shorten):
-    a = clean_url(url_to_clean)
+def show_full_url(url, article):
+    html = markdown_to_html(article.markdown)
+    article.markdown_html = html
     return render_template('article/show.html',
-                           article=a,
-                           original=url_to_clean)
+                           article=article,
+                           original=url)
 
 
 @app.route('/clean')
@@ -199,18 +200,20 @@ def show_article():
     url_to_clean = request.args.get('u')
     should_shorten = request.args.get('short')
 
-
     if not url_to_clean:
         return redirect(url_for('index'))
 
-    if should_shorten in ['0', 'no', 'false']:
-        return show_full_url(url_to_clean)
+    article = Article.query.filter_by(url=url_to_clean).first()
+    if not article:
+        result = clean_url(url_to_clean, include_html=False)
+        article = Article(url_to_clean, result['title'], result.get('authors'), result['markdown'])
+        article.put()
 
-    result = clean_url(url_to_clean, include_html=False)
+    if should_shorten in ['0', 'no', 'false']:
+        return show_full_url(url_to_clean, article)
+
     # In the cases where I'm using result.get, I don't care if it returns None.
     # In other cases, I don't want to silently fail.
-    article = Article(url_to_clean, result['title'], result.get('authors'), result['markdown'])
-    article.put()
     slug = article.get_slug()
     return redirect(url_for('show_article_shortened', slug=slug))
 
@@ -223,13 +226,9 @@ def show_article_shortened(slug):
         abort(404)
 
     html = markdown_to_html(article.markdown)
+    article.markdown_html = html
 
-    article_dict ={
-        'title': article.title,
-        'authors': article.authors,
-        'markdown_html': html
-    }
-    return render_template('article/show.html', article=article_dict, original=article.url)
+    return render_template('article/show.html', article=article, original=article.url)
 
 
 @app.route("/markdown")
