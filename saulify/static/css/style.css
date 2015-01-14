@@ -224,25 +224,3 @@ a.bookmarklet {
   margin-top: 20px;
   border: none;
 }
-
-/* maridown */
-#markdown{
-    transition: max-height 0.4s ease-in;
-    -ms-transition: max-height 0.4s ease-in;
-    -moz-transition: max-height 0.4s ease-in;
-    -webkit-transition: max-height 0.4s ease-in;
-    max-height:10em;
-    overflow:hidden;
-}
-#markdown.md-hidden{
-    transition: max-height 0.4s ease-in;
-    -ms-transition: max-height 0.4s ease-in;
-    -moz-transition: max-height 0.4s ease-in;
-    -webkit-transition: max-height 0.4s ease-in;
-    max-height: 0px; /*Using max-height instead of height because of http://stackoverflow.com/questions/3508605/css-transition-height-0-to-height-auto*/
-    overflow: hidden;
-}
-#markdown pre{
-    max-height:200px;
-    overflow:scroll;
-}
