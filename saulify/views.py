@@ -205,7 +205,7 @@ def show_article_markdown():
     if not url_to_clean:
         return redirect(url_for('index'))
 
-    a = clean_url(url_to_clean)
+    a = clean_url(url_to_clean, include_html=False)
     return render_template('article/markdown.html',
                            article=a,
                            original=url_to_clean)

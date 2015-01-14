@@ -14,7 +14,7 @@ from . import newspaper
 from saulify.sitespec import load_rules
 
 
-def clean_url(url):
+def clean_url(url, include_html=True):
     """ Extract article from given url using `scraper_cascade`
 
     Args:
@@ -25,12 +25,12 @@ def clean_url(url):
     """
 
     content = download.download_url(url)
-    result = scraper_cascade(url, content)
+    result = scraper_cascade(url, content, include_html)
 
     return result
 
 
-def scraper_cascade(url, content):
+def scraper_cascade(url, content, include_html=True):
     """ Extract article using a fallback sequence of scrapers.
 
     If no scrapers are able to extract the article body, the original page
@@ -63,10 +63,8 @@ def scraper_cascade(url, content):
     h = html2text.HTML2Text()
     h.unicode_snob = True
     result["markdown"] = h.handle(result["html"])
-    result["markdown_html"] = Markup(markdown2.markdown(result["markdown"]))
-    # TODO: Investigate the most appropriate method of converting markdown
-    # to plaintext.
-    result["plaintext"] = result["markdown"].replace('\n', ' ')
+    if include_html:
+        result["markdown_html"] = Markup(markdown2.markdown(result["markdown"]))@
 
     return result
 
