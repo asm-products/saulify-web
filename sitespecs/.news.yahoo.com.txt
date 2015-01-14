@@ -4,3 +4,4 @@ strip: //cite/abbr
 tidy: no
 
 test_url: http://ca.news.yahoo.com/cold-la-nina-winter-forecast-west-coast-183535067.html
+test_contains: A U.S. weather forecasting company is predicting

@@ -2,4 +2,6 @@ title: //div[@id='aueditable']/h1
 body: //div[@id='content']
 strip: //div[@id='message' or @id='linklist']
 prune: no
+
 test_url: http://plato.stanford.edu/entries/supervenience/
+test_contains: Supervenience is a central notion in analytic philosophy

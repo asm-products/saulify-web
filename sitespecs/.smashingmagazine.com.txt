@@ -4,4 +4,7 @@ date://ul[@class="postmetadata clearfix"]/li[@class="date"]
 body://article[contains(@id, "post-")]
 strip://div[@class="ad ed"]
 prune:yes
+
 test_url: http://wp.smashingmagazine.com/2012/11/08/complete-guide-custom-post-types/
+test_contains: WordPress has been gaining a foothold
+test_contains_image: http://media.mediatemple.netdna-cdn.com/wp-content/uploads/2012/10/customposttypes.jpg

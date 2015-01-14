@@ -1,0 +1,13 @@
+title: //div[@class='translateHead']//h1
+author: //span[@class="post_by"]/a/text()
+date: //span[@class="post_date"]
+body: //div[@class="translateBody"]
+
+#Strip article junk
+strip: //div[@id="share-box"] 
+strip: //div[@id="fb-meta-like"] 
+
+tidy: no
+
+test_url: http://foreignpolicy.com/2015/01/12/afghanistan_reconstruction_police_fraud_pentagon/
+# locked behind a paywall

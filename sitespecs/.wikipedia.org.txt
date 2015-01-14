@@ -16,6 +16,10 @@ strip: //*[contains(@class, 'noprint')]
 strip: //span[@class='noexcerpt']
 prune: no
 tidy: no
+
 test_url: http://en.wikipedia.org/wiki/Christopher_Lloyd
+test_contains: actor best-known for his roles as
 test_url: https://en.wikipedia.org/wiki/Ronnie_James_Dio
+test_contains: He is credited with popularizing the
 test_url: https://en.wikipedia.org/wiki/Metallica
+test_contains: Metallica collaborated over a long period

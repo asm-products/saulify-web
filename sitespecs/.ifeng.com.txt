@@ -11,4 +11,6 @@ title://h1[contains(@id,'artical_topic')]
 body://div[contains(@id,'artical_real')]
 
 next_page_link://*[contains(@id,'pagenext')]
+
 test_url: http://news.ifeng.com/history/zhongguojindaishi/detail_2012_04/01/13605159_0.shtml
+test_contains: 核心提示

@@ -7,3 +7,4 @@ prune: no
 
 test_url: http://tech.onliner.by/feed
 test_url: http://tech.onliner.by/2014/04/24/the-amazing-spider-man-2
+test_contains: Сегодня в Беларуси стартует

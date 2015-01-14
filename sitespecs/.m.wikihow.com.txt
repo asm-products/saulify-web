@@ -15,3 +15,4 @@ single_page_link: //a[@id='gatPrintView']
 single_page_link: concat(//link[@rel='canonical']/@href, '?printable=yes')
 
 test_url: http://pt.m.wikihow.com/Criar-um-Script-de-Login-Seguro-em-PHP-e-MySQL
+test_contains: Com cada vez mais relatos

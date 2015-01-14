@@ -6,4 +6,6 @@ strip: //h1/span[@class = 'smallcopy']
 strip: //a[@class = 'skip']
 strip: //div[@id = 'logo']
 strip: //div[contains(@class, 'comments') and contains(., 'You are not currently logged in')]
+
 test_url: http://ask.metafilter.com/159539/Connect-ZERO-I-feel-like-an-idiot
+test_contains: won a game of Connect Four
