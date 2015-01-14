@@ -1,6 +1,7 @@
 from saulify import app as test_app
 from saulify import db as test_db
 from saulify.models import User
+from webtest import TestApp
 import pytest
 import os
 
@@ -35,3 +36,7 @@ def add_user():
     test_db.session.add(user)
     test_db.session.commit()
     return user_data
+
+@pytest.fixture
+def webtest_app(app):
+    return TestApp(app)

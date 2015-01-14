@@ -199,6 +199,18 @@ def show_article():
                            original=url_to_clean)
 
 
+@app.route("/markdown")
+def show_article_markdown():
+    url_to_clean = request.args.get('u')
+    if not url_to_clean:
+        return redirect(url_for('index'))
+
+    a = clean_url(url_to_clean)
+    return render_template('article/markdown.html',
+                           article=a,
+                           original=url_to_clean)
+
+
 @app.route('/api')
 @require_appkey
 def api():
