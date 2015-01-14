@@ -17,7 +17,7 @@
   </div>
 {% endblock %}
 {% block footer %}
-    <script src="/static/js/prism.js"></script>
+    <script src="{{ url_for('static', filename='js/prism.js') }}"></script>
     <script>
     $("#select").click(selectMarkDown)
 
