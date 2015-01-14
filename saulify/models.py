@@ -1,3 +1,4 @@
+import datetime
 from saulify import db
 from passlib.apps import custom_app_context as pwd_context
 from saulify.common import get_int_from_slug, get_slug_from_int
@@ -38,14 +39,24 @@ class User(db.Model):
 class Article(db.Model):
     __tablename__ = 'article'
     id = db.Column(db.Integer, primary_key=True)
-    updated = db.Column(db.DateTime)
+    updated = db.Column(db.DateTime())
     url = db.Column(db.String(300))
     title = db.Column(db.String(300))
     author = db.Column(db.String(120))
     markdown = db.Column(db.Text())
 
-    @property
-    def slug(self):
+    def __init__(self, url, title, author, markdown):
+        self.url = url
+        self.title = title
+        self.author = author
+        self.markdown = markdown
+
+    def put(self):
+        self.updated = datetime.datetime.utcnow()
+        db.session.add(self)
+        db.session.commit()
+
+    def get_slug(self):
         return get_slug_from_int(self.id)
 
     @classmethod
