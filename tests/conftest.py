@@ -40,3 +40,8 @@ def add_user():
 @pytest.fixture
 def webtest_app(app):
     return TestApp(app)
+
+
+@pytest.fixture
+def redis():
+    pass

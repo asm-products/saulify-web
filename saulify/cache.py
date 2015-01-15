@@ -1,7 +1,8 @@
 import functools
+import flask
 from saulify import app
 
-class BaseCache()
+class BaseCache(object):
     """Any cache.py layer should subclass BaseCache,
        to make sure that it implements the necessary methods,
        and to make it easy to check whether something is a cache.py.
@@ -19,17 +20,17 @@ class BaseCache()
 
 class RequestCache(BaseCache):
     def _ensure_cache_exists(self):
-        if not hasattr(app.g, "_cache"):
-        app.g._cache = {}
+        if not hasattr(flask.g, "_cache"):
+            flask.g._cache = {}
 
     def get(self, key):
         self._ensure_cache_exists()
-        return app.g._cache.get(key)
+        return flask.g._cache.get(key)
 
     def set(self, key, value, expires=None):
         #This cache.py ignores expiration, because it only stores values for the duration of the request.
         self._ensure_cache_exists()
-        app.g._cache[key] = value
+        flask.g._cache[key] = value
 
 
 class RedisCache(BaseCache):
@@ -50,7 +51,7 @@ class CombinedCache(BaseCache):
 
     def get(self, key):
         for cache in self.caches:
-            value = cache.get(key):
+            value = cache.get(key)
             if value:
                 return value
         return None
@@ -67,7 +68,7 @@ def _make_key(namespace, fname, *args, **kwargs):
 
 
 
-def cached_function(namespace, ttl=None):
+def cached_function(namespace, expires=None):
     """This function is intended to be used as a decorator, for expensive operations.
 
     It first checks if the function has been called before during the request.
@@ -79,19 +80,20 @@ def cached_function(namespace, ttl=None):
         To be absolutely certain that collisions don't happen, there should be
         no two functions with the same name in the same namespace leave at None,
         to persist indefinitely, or until it is evicted from memory..
-     -  ttl: an integer time in seconds for which the return value of this function is valid.
+     -  expires: an integer time in seconds for which the return value of this function is valid.
     """
-    cache = CombinedCache([RequestCache, RedisCache])
+    cache = CombinedCache([RequestCache(), RedisCache()])
 
     def func_handler(func):
 
-        @functools.wraps(func):
+        @functools.wraps(func)
         def wrapper(*args, **kwargs):
             key = "".join([repr(arg) for arg in args])
             value = cache.get(key)
 
             if not value:
                 value = func(*args, **kwargs)
+                cache.set(key, value, expires)
 
             return value
 
