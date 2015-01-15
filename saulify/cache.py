@@ -75,6 +75,19 @@ def cached_function(namespace, expires=None):
     If it hasn't it checks whether there's a value stored in Redis.
     If there isn't, the function is called.
 
+    This decorator assumes that the function it decorates is pure. In other words,
+    given the same parameters, it should always return the same value.
+
+    usage example:
+
+    ```
+    expiration = 60*60*24*7 # 7 days
+
+    @cache.cached_function(namespace='article', expires=expiration)
+    def fetch_article(article_id):
+        ...
+    ```
+
     Arguments:
      -  namespace: a namespace string to help avoid collisions.
         To be absolutely certain that collisions don't happen, there should be
@@ -88,7 +101,7 @@ def cached_function(namespace, expires=None):
 
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
-            key = "".join([repr(arg) for arg in args])
+            key = _make_key(namespace, func.__name__, *args, **kwargs)
             value = cache.get(key)
 
             if not value:
