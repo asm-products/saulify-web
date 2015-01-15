@@ -106,7 +106,8 @@ def cached_function(namespace, expires=None):
 
             if not value:
                 value = func(*args, **kwargs)
-                cache.set(key, value, expires)
+                if value is not None: # no sense in caching None.
+                    cache.set(key, value, expires)
 
             return value
 
