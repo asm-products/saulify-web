@@ -62,7 +62,7 @@ class Article(db.Model):
     @classmethod
     def get_by_slug(cls, slug):
         """Gets an article by slug, returns None if no such article exsits."""
-        id = hashids.Hashids().decode(sig)[0]
+        id = hashids.Hashids().decode(slug)[0]
         return cls.query.get(id)
 
     @classmethod
