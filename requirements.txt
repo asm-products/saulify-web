@@ -31,3 +31,4 @@ flask-principal
 redis==2.10.3
 colorama==0.3.2
 webtest
+hashids

@@ -1,7 +1,7 @@
 import datetime
+import hashids
 from saulify import db
 from passlib.apps import custom_app_context as pwd_context
-from saulify.common import get_int_from_slug, get_slug_from_int
 
 class User(db.Model):
     __tablename__ = 'user'
@@ -57,12 +57,12 @@ class Article(db.Model):
         db.session.commit()
 
     def get_slug(self):
-        return get_slug_from_int(self.id)
+        return hashids.Hashids().encode(self.id)
 
     @classmethod
     def get_by_slug(cls, slug):
         """Gets an article by slug, returns None if no such article exsits."""
-        id = get_int_from_slug(slug)
+        id = hashids.Hashids().decode(sig)[0]
         return cls.query.get(id)
 
     @classmethod
