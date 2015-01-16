@@ -49,7 +49,7 @@ def test_cache_doesnt_call_function_if_value_is_in_redis(app, monkeypatch):
     assert expensive_function() == "expected_value"
     assert mock_redis.get.call_count == 1
 
-def test_integration(app):
+def test_integration(app, redis):
     # this test uses the redis server at TEST_REDIS_URL
     call_counter = mock.Mock(return_value="foo")
     func_mock = lambda : call_counter()

@@ -24,7 +24,7 @@ def redis(request, monkeypatch):
 
 
 @pytest.fixture
-def app(redis):
+def app():
     test_app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_TEST_DB
     test_db.create_all()
     return test_app
