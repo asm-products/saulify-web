@@ -13,6 +13,7 @@ def mock_out_redis(app, monkeypatch, return_value=None):
 def test_cache_looks_in_request_cache_and_redis_before_calling_the_function(app, monkeypatch):
 
     redis_mock = mock_out_redis(app, monkeypatch)
+    # TODO find a way to actually mock out flask.g. Mocking it out using mock.PropertyMock doesn't work.
 
     @cache.cached_function(namespace="test")
     def heavy_function(n):
