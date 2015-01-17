@@ -24,8 +24,8 @@ def test_updated_date_is_set_when_article_is_saved(app):
 
     #time passes during tests, so we can't be really accurate with times.
     #mocking out utcnow gives problems when saving.
-    onesecago = datetime.datetime.utcnow() - datetime.timedelta(seconds=1)
-    assert onesecago < article.updated < datetime.datetime.utcnow()
+    twosecsago = datetime.datetime.utcnow() - datetime.timedelta(seconds=2)
+    assert twosecsago < article.updated < datetime.datetime.utcnow()
 
 
 def test_create_and_get_by_slug(app):
