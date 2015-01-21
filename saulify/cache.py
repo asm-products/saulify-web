@@ -1,3 +1,4 @@
+import ast
 import functools
 import flask
 from saulify import app
@@ -66,14 +67,17 @@ def _make_key(namespace, fname, *args, **kwargs):
     arguments += ','.join(['%s=%r' % pair for pair in kwargs.iteritems()])
     return "%s.%s(%s)" % (namespace, fname, arguments)
 
+_noop = lambda x: x
 
-
-def cached_function(namespace, expires=None):
+def cached_function(namespace, expires=None, serializer=_noop , deserializer=_noop):
     """This function is intended to be used as a decorator, for expensive operations.
 
     It first checks if the function has been called before during the request.
     If it hasn't it checks whether there's a value stored in Redis.
     If there isn't, the function is called.
+
+    Values are alwas saved as strings. To make sure you store all the information you want, and get it back out again,
+    you can provide your own serializers and deserializers. This module provides a couple of (de)serializers for basic python datatypes.
 
     This decorator assumes that the function it decorates is pure. In other words,
     given the same parameters, it should always return the same value.
@@ -94,6 +98,8 @@ def cached_function(namespace, expires=None):
         no two functions with the same name in the same namespace leave at None,
         to persist indefinitely, or until it is evicted from memory..
      -  expires: an integer time in seconds for which the return value of this function is valid.
+     -  serializer: a function that serializes the returned value into a string
+     -  deserializer: a function that turns the serialized string into the original value.
     """
     cache = CombinedCache([RequestCache(), RedisCache()])
 
@@ -104,10 +110,12 @@ def cached_function(namespace, expires=None):
             key = _make_key(namespace, func.__name__, *args, **kwargs)
             value = cache.get(key)
 
-            if not value:
+            if value is None:
                 value = func(*args, **kwargs)
                 if value is not None: # no sense in caching None.
-                    cache.set(key, value, expires)
+                    cache.set(key, serializer(value), expires)
+            else:
+                value = deserializer(value)
 
             return value
 
@@ -115,3 +123,10 @@ def cached_function(namespace, expires=None):
 
     return func_handler
 
+def serialize_expression(e):
+    """Serializes simple Python expressions that include only None, booleans, numbers, strings, dictionaries, tuples and lists."""
+    return repr(e)
+
+def deserialize_expression(e):
+    """Deserializes simple Python expressions that include only None, booleans, numbers, strings, dictionaries, tuples and lists."""
+    return ast.literal_eval(e)
