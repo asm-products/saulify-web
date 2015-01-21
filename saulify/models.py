@@ -58,14 +58,15 @@ class Article(db.Model):
         db.session.add(self)
         db.session.commit()
 
-
+    # These methods don't take a 'self' argument, because they're used during class definition
     def _serialize(obj):
         return cache.serialize_expression({
             'id': obj.id,
             'updated': time.mktime(obj.updated.timetuple())+1e-6*obj.updated.microsecond, #converts datetime to timestamp
             'url': obj.url,
             'authors': obj.authors,
-            'markdown': obj.markdown
+            'markdown': obj.markdown,
+            'title': obj.title
         })
 
 
@@ -73,7 +74,12 @@ class Article(db.Model):
         d = cache.deserialize_expression(s)
         o = Article(d['url'], d['title'], d['authors'], d['markdown'])
         o.updated = d['updated']
+        o.id = d['id']
         return o
+
+    # public versions
+    serialize = staticmethod(_serialize)
+    deserialize = staticmethod(_deserialize)
 
     def get_slug(self):
         return hashids.Hashids().encode(self.id)
@@ -86,10 +92,9 @@ class Article(db.Model):
         return cls.query.get(id)
 
     @classmethod
-    @cache.cached_function(namespace='models', serializer=_serialize, deserializer=_deserialize)
     def get_by_url(cls, url):
         """Gets the article by its url,
            returns None if no such article exists in the db.
         """
-        return cls.query.filter_by(url=url)
+        return cls.query.filter_by(url=url).first()
 

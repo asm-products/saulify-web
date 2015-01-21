@@ -69,8 +69,8 @@ def test_show_article_markdown(webtest_app):
     page_to_markdownify = 'http://example.com'
     resp = webtest_app.get(url_for('show_article_markdown', u=page_to_markdownify))
     cleaned = cascade.clean_url(page_to_markdownify)
-    assert cleaned["markdown"] in resp.body
-    assert cleaned['title'] in resp.body
+    assert cleaned.markdown in resp.body
+    assert cleaned.title in resp.body
 
 
 def test_clean_no_redirect(webtest_app):
@@ -78,7 +78,7 @@ def test_clean_no_redirect(webtest_app):
     cleaned = cascade.clean_url(url)
     for false_arg in ['no', '0', 'false']:
         resp = webtest_app.get(url_for('show_article', u=url, short=false_arg))
-        assert cleaned["markdown_html"] in resp.body
+        assert cleaned.markdown_html in resp.body
 
 def test_clean_and_shorten_url(webtest_app):
     url = "http://example.com"
@@ -89,4 +89,4 @@ def test_clean_and_shorten_url(webtest_app):
     assert len(resp.location) < url
 
     resp2 = webtest_app.get(resp.location)
-    assert cleaned['markdown_html'] in resp2.body
+    assert cleaned.markdown_html in resp2.body

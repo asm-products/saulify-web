@@ -12,8 +12,27 @@ from . import instapaper
 from . import newspaper
 
 from saulify.sitespec import load_rules
+from saulify import cache
+from saulify import models
 
 
+def _serializer_cleaned_article(article):
+    # This is necessary because we don't store markdown_html with the article.
+    s = models.Article.serialize(article)
+    return cache.serialize_expression((s, hasattr(article, 'markdown_html'),))
+
+
+def _deserialize_cleaned_article(s):
+    articlestr, include_html = cache.deserialize_expression(s)
+    article = models.Article.deserialize(articlestr)
+    if include_html:
+        article.markdown_html = markdown_to_html(article.markdown)
+    return article
+
+
+@cache.cached_function(namespace="cascade",
+                       serializer=_serializer_cleaned_article,
+                       deserializer=_deserialize_cleaned_article)
 def clean_url(url, include_html=True):
     """ Extract article from given url using `scraper_cascade`
 
@@ -23,11 +42,21 @@ def clean_url(url, include_html=True):
     Returns:
         Dictionary detailing the extracted article.
     """
+    article = models.Article.get_by_url(url)
+    if article:
+        if include_html:
+            article.markdown_html = markdown_to_html(article.markdown)
+        return article
 
     content = download.download_url(url)
     result = scraper_cascade(url, content, include_html)
 
-    return result
+    article = models.Article(url, result['title'], result['authors'], result['markdown'])
+    article.put()
+    if include_html:
+        article.markdown_html = result['markdown_html']
+
+    return article
 
 
 def scraper_cascade(url, content, include_html=True):

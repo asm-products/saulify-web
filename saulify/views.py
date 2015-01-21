@@ -203,17 +203,11 @@ def show_article():
     if not url_to_clean:
         return redirect(url_for('index'))
 
-    article = Article.query.filter_by(url=url_to_clean).first()
-    if not article:
-        result = clean_url(url_to_clean, include_html=False)
-        article = Article(url_to_clean, result['title'], result.get('authors'), result['markdown'])
-        article.put()
+    article = clean_url(url_to_clean, include_html=False)
 
     if should_shorten in ['0', 'no', 'false']:
         return show_full_url(url_to_clean, article)
 
-    # In the cases where I'm using result.get, I don't care if it returns None.
-    # In other cases, I don't want to silently fail.
     slug = article.get_slug()
     return redirect(url_for('show_article_shortened', slug=slug))
 
