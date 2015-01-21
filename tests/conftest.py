@@ -2,11 +2,25 @@ from saulify import app as test_app
 from saulify import db as test_db
 from saulify.models import User
 from webtest import TestApp
+from redis import Redis
 import pytest
 import os
 
 
 SQLALCHEMY_TEST_DB = os.environ.get('TEST_DATABASE_URL')
+
+@pytest.fixture
+def redis(request, monkeypatch):
+    _redis = Redis(host=test_app.config.get('TEST_REDIS_HOST', None),
+                   port=test_app.config.get('TEST_REDIS_PORT', None),
+                   password=test_app.config.get('TEST_REDIS_PASS', None))
+    monkeypatch.setattr(test_app, "redis", _redis)
+
+    def teardown():
+        _redis.flushdb()
+
+    request.addfinalizer(teardown)
+    return _redis
 
 
 @pytest.fixture
@@ -40,3 +54,4 @@ def add_user():
 @pytest.fixture
 def webtest_app(app):
     return TestApp(app)
+
