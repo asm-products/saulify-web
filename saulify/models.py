@@ -1,6 +1,9 @@
+import datetime
+import time
+import hashids
 from saulify import db
+from saulify import cache
 from passlib.apps import custom_app_context as pwd_context
-
 
 class User(db.Model):
     __tablename__ = 'user'
@@ -33,3 +36,65 @@ class User(db.Model):
 
     def __repr__(self):
         return '<Name %r>' % self.username
+
+
+class Article(db.Model):
+    __tablename__ = 'article'
+    id = db.Column(db.Integer, primary_key=True)
+    updated = db.Column(db.DateTime())
+    url = db.Column(db.String(300))
+    title = db.Column(db.String(300))
+    authors = db.Column(db.String(120))
+    markdown = db.Column(db.Text())
+
+    def __init__(self, url, title, authors, markdown):
+        self.url = url
+        self.title = title
+        self.authors = authors
+        self.markdown = markdown
+
+    def put(self):
+        self.updated = datetime.datetime.utcnow()
+        db.session.add(self)
+        db.session.commit()
+
+    # These methods don't take a 'self' argument, because they're used during class definition
+    def _serialize(obj):
+        return cache.serialize_expression({
+            'id': obj.id,
+            'updated': time.mktime(obj.updated.timetuple())+1e-6*obj.updated.microsecond, #converts datetime to timestamp
+            'url': obj.url,
+            'authors': obj.authors,
+            'markdown': obj.markdown,
+            'title': obj.title
+        })
+
+
+    def _deserialize(s):
+        d = cache.deserialize_expression(s)
+        o = Article(d['url'], d['title'], d['authors'], d['markdown'])
+        o.updated = d['updated']
+        o.id = d['id']
+        return o
+
+    # public versions
+    serialize = staticmethod(_serialize)
+    deserialize = staticmethod(_deserialize)
+
+    def get_slug(self):
+        return hashids.Hashids().encode(self.id)
+
+    @classmethod
+    @cache.cached_function(namespace='models', serializer=_serialize, deserializer=_deserialize)
+    def get_by_slug(cls, slug):
+        """Gets an article by slug, returns None if no such article exsits."""
+        id = hashids.Hashids().decode(slug)[0]
+        return cls.query.get(id)
+
+    @classmethod
+    def get_by_url(cls, url):
+        """Gets the article by its url,
+           returns None if no such article exists in the db.
+        """
+        return cls.query.filter_by(url=url).first()
+

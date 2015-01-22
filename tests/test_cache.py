@@ -1,4 +1,5 @@
 import mock
+import pytest
 from saulify import cache
 
 
@@ -61,3 +62,34 @@ def test_integration(app, redis):
     assert expensive_function() == 'foo'
 
     assert call_counter.call_count == 1
+
+def test_cache_uses_serializer(app, monkeypatch):
+    mock_redis = mock_out_redis(app, monkeypatch, return_value=None)
+
+    def serializer(s):
+        return str(s)
+
+    def deserializer(s):
+        return int(s)
+
+    @cache.cached_function(namespace="test", serializer=serializer, deserializer=deserializer)
+    def expensive_function(x):
+        return x*x
+
+    assert expensive_function(3) == 9
+    assert expensive_function(3) == 9 #ensure value is also deserialized on cache hit.
+    assert mock_redis.set.call_args[0][1] == '9'
+
+@pytest.mark.parametrize(
+    'val,strval', [
+        (3, '3'),
+        (3.5, '3.5'),
+        (True, 'True'),
+        (None, 'None'),
+        ('One does not simply test a cache.', "'One does not simply test a cache.'"),
+        ([1, 'a', 3.5, None, False], "[1, 'a', 3.5, None, False]")
+    ]
+)
+def test_serialize_and_unserialize_expression(val, strval):
+    assert cache.serialize_expression(val) == strval
+    assert cache.deserialize_expression(strval) == val
