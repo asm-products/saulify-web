@@ -76,7 +76,7 @@ def cached_function(namespace, expires=None, serializer=_noop , deserializer=_no
     If it hasn't it checks whether there's a value stored in Redis.
     If there isn't, the function is called.
 
-    Values are alwas saved as strings. To make sure you store all the information you want, and get it back out again,
+    Values are always saved as strings. To make sure you store all the information you want, and get it back out again,
     you can provide your own serializers and deserializers. This module provides a couple of (de)serializers for basic python datatypes.
 
     This decorator assumes that the function it decorates is pure. In other words,
