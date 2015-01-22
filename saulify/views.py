@@ -5,13 +5,13 @@ from flask.ext.login import login_user, logout_user, current_user, \
 from flask.ext.principal import Permission, RoleNeed, Identity, \
     AnonymousIdentity, identity_changed, UserNeed, identity_loaded
 from saulify import app, login_manager, db
-from models import User
+from models import User, Article
 from functools import wraps
 from common import api_key_gen
 from forms import AddUserForm
 import json
 
-from saulify.scrapers.cascade import clean_url
+from saulify.scrapers.cascade import clean_url, markdown_to_html
 
 
 MEMBER = 100
@@ -187,19 +187,57 @@ def index():
     return render_template('index.html')
 
 
+def show_full_url(url, article):
+    html = markdown_to_html(article.markdown)
+    article.markdown_html = html
+    return render_template('article/show.html',
+                           article=article,
+                           original=url)
+
+
 @app.route('/clean')
 def show_article():
+    url_to_clean = request.args.get('u')
+    should_shorten = request.args.get('short')
+
+    if not url_to_clean:
+        return redirect(url_for('index'))
+
+    article = clean_url(url_to_clean, include_html=False)
+
+    if not article:
+        return render_template('error_no_article.html'), 404
+
+    if should_shorten in ['0', 'no', 'false']:
+        return show_full_url(url_to_clean, article)
+
+    slug = article.get_slug()
+    return redirect(url_for('show_article_shortened', slug=slug))
+
+
+@app.route("/r/<slug>")
+def show_article_shortened(slug):
+    article = Article.get_by_slug(slug)
+
+    if not article:
+        abort(404)
+
+    html = markdown_to_html(article.markdown)
+    article.markdown_html = html
+
+    return render_template('article/show.html', article=article, original=article.url)
+
+
+@app.route("/markdown")
+def show_article_markdown():
     url_to_clean = request.args.get('u')
     if not url_to_clean:
         return redirect(url_for('index'))
 
-    a = clean_url(url_to_clean)
-    if not a:
-        return render_template('error_no_article.html'), 404
-    else: 
-        return render_template('article/show.html',
-                               article=a,
-                               original=url_to_clean)
+    a = clean_url(url_to_clean, include_html=False)
+    return render_template('article/markdown.html',
+                           article=a,
+                           original=url_to_clean)
 
 
 @app.route('/api')

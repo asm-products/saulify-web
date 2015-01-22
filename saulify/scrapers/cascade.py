@@ -12,9 +12,28 @@ from . import instapaper
 from . import newspaper
 
 from saulify.sitespec import load_rules
+from saulify import cache
+from saulify import models
 
 
-def clean_url(url):
+def _serializer_cleaned_article(article):
+    # This is necessary because we don't store markdown_html with the article.
+    s = models.Article.serialize(article)
+    return cache.serialize_expression((s, hasattr(article, 'markdown_html'),))
+
+
+def _deserialize_cleaned_article(s):
+    articlestr, include_html = cache.deserialize_expression(s)
+    article = models.Article.deserialize(articlestr)
+    if include_html:
+        article.markdown_html = markdown_to_html(article.markdown)
+    return article
+
+
+@cache.cached_function(namespace="cascade",
+                       serializer=_serializer_cleaned_article,
+                       deserializer=_deserialize_cleaned_article)
+def clean_url(url, include_html=True):
     """ Extract article from given url using `scraper_cascade`
 
     Args:
@@ -23,15 +42,25 @@ def clean_url(url):
     Returns:
         Dictionary detailing the extracted article.
     """
+    article = models.Article.get_by_url(url)
+    if article:
+        if include_html:
+            article.markdown_html = markdown_to_html(article.markdown)
+        return article
 
     content, content_type = download.download_url(url)
     content_is_html = "html" in content_type # Don't support XML, JSON, etc.
-    result = scraper_cascade(url, content) if content_is_html else ""
+    result = scraper_cascade(url, content, include_html) if content_is_html else ""
 
-    return result
+    article = models.Article(url, result['title'], result['authors'], result['markdown'])
+    article.put()
+    if include_html:
+        article.markdown_html = result['markdown_html']
+
+    return article
 
 
-def scraper_cascade(url, content):
+def scraper_cascade(url, content, include_html=True):
     """ Extract article using a fallback sequence of scrapers.
 
     If no scrapers are able to extract the article body, the original page
@@ -63,13 +92,15 @@ def scraper_cascade(url, content):
     # Add markdown (and plaintext)
     h = html2text.HTML2Text()
     h.unicode_snob = True
-    result["markdown"] = h.handle(result["html"])
-    result["markdown_html"] = Markup(markdown2.markdown(result["markdown"]))
-    # TODO: Investigate the most appropriate method of converting markdown
-    # to plaintext.
-    result["plaintext"] = result["markdown"].replace('\n', ' ')
+    result['markdown'] = h.handle(result["html"])
+    if include_html:
+        result['markdown_html'] = markdown_to_html(result['markdown'])
 
     return result
+
+
+def markdown_to_html(markdown):
+    return Markup(markdown2.markdown(markdown))
 
 
 def load_superdomains(hostname):

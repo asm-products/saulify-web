@@ -15,3 +15,10 @@ if REDISCLOUD_URL:
   REDIS_HOST = url.hostname
   REDIS_PORT = url.port
   REDIS_PASS = url.password
+
+TEST_REDIS_URL = os.environ.get('TEST_REDIS_URL')
+if TEST_REDIS_URL:
+  url = urlparse.urlparse(TEST_REDIS_URL)
+  TEST_REDIS_HOST = url.hostname
+  TEST_REDIS_PORT = url.port
+  TEST_REDIS_PASS = url.password
