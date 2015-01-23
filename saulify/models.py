@@ -44,7 +44,7 @@ class Article(db.Model):
     updated = db.Column(db.DateTime())
     url = db.Column(db.String(300))
     title = db.Column(db.String(300))
-    authors = db.Column(db.String(120))
+    authors = db.Column(db.String(300))
     markdown = db.Column(db.Text())
 
     def __init__(self, url, title, authors, markdown):
@@ -52,6 +52,12 @@ class Article(db.Model):
         self.title = title
         self.authors = authors
         self.markdown = markdown
+
+    def __str__(self):
+        return "Article: url=%s title=%s authors=%s markdown=%s" % (self.url, self.title, self.authors, self.markdown.encode('ascii', 'ignore'))
+
+    def __repr__(self):
+        return 'Article("%s","%s", "%s", "%s")' % (self.url, self.title, self.authors, self.markdown.encode('ascii', 'ignore'))
 
     def put(self):
         self.updated = datetime.datetime.utcnow()

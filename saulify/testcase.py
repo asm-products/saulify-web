@@ -30,7 +30,7 @@ class TestCase(object):
 
     def run(self):
         try:
-            output = clean_url(self.url)
+            article = clean_url(self.url, include_html=True)
         except Exception as e:
             return {
                 "url": self.url,
@@ -38,14 +38,14 @@ class TestCase(object):
                 "message": e.message
             }
         else:
-            if not output:
+            if not article:
                 return {
                   "url": self.url,
                   "status": "EXCEPTION",
                   "message": "Output was empty; Could be because the result was not HTML."
                 }
             else:
-                norm_space = re.sub(r'\s+', ' ', output["markdown"])
+                norm_space = re.sub(r'\s+', ' ', article.markdown)
                 if "test_contains" not in self._spec:
                     return {
                             "url": self.url,
@@ -58,7 +58,7 @@ class TestCase(object):
                         "status": "OK",
                         "result": {
                             "fragments": self.check_fragments(norm_space),
-                            "images": self.check_images(output["html"]),
+                            "images": self.check_images(article.markdown_html),
                         }
                     }
 
@@ -97,9 +97,9 @@ class TestCase(object):
         Outputs Markdown for a test_url so we can easily define a test_contains for it.
         """
         try:
-            result = clean_url(self.url)
+            article = clean_url(self.url, include_html=True)
             if result:
-                markdown = result["markdown"].encode('utf-8')
+                markdown = article.markdown.encode('utf-8')
         except Exception as e:
             print("Exception on URL {0}: {1}".format(self.url, e.message))
         else:
